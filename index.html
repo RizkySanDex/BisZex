@@ -14,62 +14,39 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
 .logo i{font-size:1.6rem;color:#ff5314}
 .logo h1{font-size:1.2rem;font-weight:700}
 .search-bar{flex:1;display:flex;max-width:500px;min-width:180px}
-.search-bar input{flex:1;padding:9px 12px;border:1px solid #333;border-radius:6px 0 0 6px;background:#222;color:#fff}
+.search-bar input{flex:1;padding:10px 12px;border:1px solid #333;border-radius:6px 0 0 6px;background:#222;color:#fff}
 .search-bar button{background:#ff5314;color:white;padding:0 14px;border-radius:0 6px 6px 0;border:none;cursor:pointer}
 .nav-links a{margin-left:12px;color:#aaa;text-decoration:none;font-size:0.9rem;cursor:pointer}
-/* GRID BESAR (Seperti XVideos / Pornhub) */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 15px;
-  padding: 15px;
-}
 
-/* KOTAK VIDEO */
-.video-item {
-  background: #111;
-  border-radius: 10px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: .3s;
-}
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:15px;padding:10px}
 
-.video-item:hover {
-  transform: scale(1.03);
-}
+.video-card{background:#1a1a1a;border-radius:10px;overflow:hidden;cursor:pointer;transition:.3s}
+.video-card:hover{transform:scale(1.03)}
+.video-card img{width:100%;height:180px;object-fit:cover;border-radius:10px 10px 0 0}
+.video-card h3{padding:10px;font-size:15px;color:#fff;line-height:1.3em;text-align:left;height:40px;overflow:hidden}
 
-/* POSTER BESAR */
-.video-item img {
-  width: 100%;
-  height: 180px; /* DIBESARKAN */
-  object-fit: cover;
-  border-radius: 10px 10px 0 0;
-}
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;align-items:center;justify-content:center;z-index:9999;padding:10px}
+.modal.open{display:flex}
+.modal-box{width:95%;max-width:1000px;background:#111;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.modal-close{position:absolute;top:10px;right:10px;width:35px;height:35px;border-radius:50%;background:rgba(255,83,20,.8);color:white;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;z-index:10}
+.modal-video-wrap{position:relative;width:100%;aspect-ratio:16/9;background:black}
+.modal-video-wrap iframe{width:100%;height:100%;object-fit:contain;border:0}
 
-/* JUDUL */
-.video-title {
-  padding: 10px;
-  font-size: 15px;
-  color: #fff;
-  line-height: 1.3em;
-  text-align: left;
-}
+/* AD SLOT */
+.ad-slot{margin:8px 0;text-align:center}
 
 /* MOBILE RESPONSIVE */
-@media (max-width: 480px) {
-  .grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  }
-
-  .video-item img {
-    height: 140px; /* BESAR TAPI PAS MOBILE */
-  }
-
-  .video-title {
-    font-size: 14px;
-  }
+@media(max-width:768px){
+  .video-card img{height:160px}
+  .video-card h3{font-size:14px;height:36px}
+  .video-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
 }
-
+@media(max-width:480px){
+  .video-card img{height:140px}
+  .video-card h3{font-size:13px;height:32px}
+  .video-grid{grid-template-columns:repeat(2,1fr)}
+}
 </style>
 </head>
 <body>
@@ -86,13 +63,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
   <!-- HEADER AD 320x50 -->
   <div class="ad-slot">
     <script type="text/javascript">
-      atOptions = {
-        'key' : 'f911d9fd4c8cadde096c6bfbf9d30630',
-        'format' : 'iframe',
-        'height' : 50,
-        'width' : 320,
-        'params' : {}
-      };
+      atOptions = {'key':'f911d9fd4c8cadde096c6bfbf9d30630','format':'iframe','height':50,'width':320,'params':{}};
     </script>
     <script type="text/javascript" src="//www.highperformanceformat.com/f911d9fd4c8cadde096c6bfbf9d30630/invoke.js"></script>
   </div>
@@ -109,13 +80,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
     <!-- MODAL AD 300x250 -->
     <div class="ad-slot">
       <script type="text/javascript">
-        atOptions = {
-          'key' : 'c4f0b959a9c4b12d8d039c71b3c3e1ec',
-          'format' : 'iframe',
-          'height' : 250,
-          'width' : 300,
-          'params' : {}
-        };
+        atOptions = {'key':'c4f0b959a9c4b12d8d039c71b3c3e1ec','format':'iframe','height':250,'width':300,'params':{}};
       </script>
       <script type="text/javascript" src="//www.highperformanceformat.com/c4f0b959a9c4b12d8d039c71b3c3e1ec/invoke.js"></script>
     </div>
@@ -125,13 +90,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
 <!-- FOOTER AD 320x50 -->
 <div class="ad-slot" style="text-align:center;margin:20px 0">
   <script type="text/javascript">
-    atOptions = {
-      'key' : 'f911d9fd4c8cadde096c6bfbf9d30630',
-      'format' : 'iframe',
-      'height' : 50,
-      'width' : 320,
-      'params' : {}
-    };
+    atOptions = {'key':'f911d9fd4c8cadde096c6bfbf9d30630','format':'iframe','height':50,'width':320,'params':{}};
   </script>
   <script type="text/javascript" src="//www.highperformanceformat.com/f911d9fd4c8cadde096c6bfbf9d30630/invoke.js"></script>
 </div>
@@ -151,7 +110,6 @@ function gdataIoCallback(data){
     const content = post.content.$t;
     const doc = new DOMParser().parseFromString(content,"text/html");
 
-    // Ambil thumbnail & iframe
     const iframeEl = doc.querySelector(".video_url iframe");
     const thumbEl = doc.querySelector(".thumbnail");
     if(!iframeEl) return;
@@ -161,8 +119,7 @@ function gdataIoCallback(data){
 
     const card = document.createElement("div");
     card.className = "video-card";
-    card.innerHTML = `<div class="video-thumb"><img src="${thumbSrc}" alt="${title}"></div>
-                      <div class="video-info"><h3>${title}</h3></div>`;
+    card.innerHTML = `<img src="${thumbSrc}" alt="${title}"><h3>${title}</h3>`;
     card.onclick = ()=>openModal(iframeSrc);
     container.appendChild(card);
   });
