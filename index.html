@@ -1,486 +1,135 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Aisah-Video (Paralel Blogger + GitHub + Netlify)</title>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aisah Video</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-/* ----- BASIC / LAYOUT ----- */
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Inter, "Segoe UI", Arial, sans-serif;background:#0f0f10;color:#fff;line-height:1.4}
-.container{width:94%;max-width:1150px;margin:18px auto}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0}
-.logo{display:flex;align-items:center;gap:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Segoe UI",Arial,sans-serif;background:#111;color:#fff}
+.container{width:95%;max-width:1200px;margin:20px auto}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}
+.logo{display:flex;align-items:center;gap:8px}
 .logo i{font-size:1.6rem;color:#ff5314}
-.logo h1{font-size:1.1rem;font-weight:700}
-.search-bar{flex:1;max-width:520px;display:flex}
-.search-bar input{flex:1;padding:9px;border-radius:6px 0 0 6px;border:1px solid #333;background:#0b0b0c;color:#fff}
-.search-bar button{padding:0 14px;border-radius:0 6px 6px 0;border:0;background:#222;color:#fff;cursor:pointer}
-.ad-header{width:320px;height:50px;background:#1b1b1d;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#ddd;font-size:12px}
-
-/* filters */
-.filters-container{margin:14px 0;overflow:hidden}
-.filters-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px}
-.filter-btn{padding:8px 12px;border-radius:18px;border:1px solid #222;background:#0f0f10;color:#ddd;cursor:pointer;white-space:nowrap}
-.filter-btn.active{background:#ff5314;color:#fff;border-color:#ff5314}
-
-/* grid */
-.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
-.video-card{background:#111;border-radius:10px;overflow:hidden;cursor:pointer;border:1px solid #1f1f1f;transition:transform .14s}
-.video-card:hover{transform:translateY(-6px)}
-.video-thumb{position:relative;display:block;width:100%;aspect-ratio:16/9;background:#0b0b0b;overflow:hidden}
-.video-thumb img{width:100%;height:100%;object-fit:cover;display:block}
-.play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-.play-overlay .circle{width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff}
-.video-info{padding:10px}
-.video-info h3{font-size:0.9rem;color:#fff;font-weight:600;height:40px;overflow:hidden}
-
-/* modal */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;padding:10px;z-index:2000}
+.logo h1{font-size:1.2rem;font-weight:700}
+.search-bar{flex:1;display:flex;max-width:500px;min-width:180px}
+.search-bar input{flex:1;padding:9px 12px;border:1px solid #333;border-radius:6px 0 0 6px;background:#222;color:#fff}
+.search-bar button{background:#ff5314;color:white;padding:0 14px;border-radius:0 6px 6px 0;border:none;cursor:pointer}
+.nav-links a{margin-left:12px;color:#aaa;text-decoration:none;font-size:0.9rem;cursor:pointer}
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.video-card{background:#1a1a1a;border-radius:10px;overflow:hidden;transition:.2s;cursor:pointer}
+.video-card:hover{transform:translateY(-4px)}
+.video-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#222}
+.video-thumb img{width:100%;height:100%;object-fit:cover}
+.video-info{padding:8px}
+.video-info h3{font-size:0.85rem;line-height:1.2;overflow:hidden;height:40px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;padding:10px;z-index:1500}
 .modal.open{display:flex}
-.modal-box{width:100%;max-width:980px;border-radius:12px;background:#070707;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.7)}
-.modal-head{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid #151515}
-.modal-title{font-size:1rem;font-weight:700}
-.modal-close{background:#ff3b3b;border:0;color:#fff;padding:6px 10px;border-radius:8px;cursor:pointer}
-.modal-body{display:flex;gap:12px;align-items:flex-start;padding:12px;flex-wrap:wrap}
-.modal-left{flex:2;min-width:260px}
-.modal-video{width:100%;aspect-ratio:16/9;background:#000;position:relative}
-.modal-video iframe,.modal-video video{position:absolute;inset:0;width:100%;height:100%;border:0}
-.modal-right{width:300px;max-width:32%;display:flex;flex-direction:column;gap:8px}
-.ad-300{width:100%;height:250px;background:#111;border:1px dashed #222;display:flex;align-items:center;justify-content:center;color:#bbb}
-.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,72px);gap:6px;justify-content:center}
-.gallery-grid img{width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid #222}
-
-/* modal footer ad */
-.modal-footer{padding:10px;border-top:1px solid #151515;display:flex;align-items:center;gap:8px}
-.ad-320{width:320px;height:50px;background:#111;border:1px dashed #222;display:flex;align-items:center;justify-content:center;color:#bbb}
-
-/* responsive */
-@media(max-width:900px){
-  .modal-body{flex-direction:column}
-  .modal-right{width:100%;max-width:none}
-}
-@media(max-width:480px){
-  .video-grid{grid-template-columns:repeat(2,1fr);gap:10px}
-  .logo h1{font-size:1rem}
-  .ad-header{display:none}
-}
+.modal-box{background:#111;width:100%;max-width:1000px;border-radius:12px;overflow:hidden;position:relative;display:flex;flex-direction:column}
+.modal-close{position:absolute;top:10px;right:10px;width:35px;height:35px;border-radius:50%;background:rgba(255,83,20,.8);color:white;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;z-index:10}
+.modal-video-wrap{position:relative;width:100%;aspect-ratio:16/9;background:black}
+.modal-video-wrap iframe, .modal-video-wrap video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;border:0}
+.ad-slot{margin:8px 0;text-align:center}
+@media(max-width:768px){.video-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}}
+@media(max-width:480px){.video-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <div class="logo"><i class="fas fa-play-circle"></i><h1>Aisah-Video</h1></div>
-
+    <div class="logo"><i class="fas fa-play-circle"></i><h1>Aisah Video</h1></div>
     <div class="search-bar">
-      <input id="searchInput" placeholder="Cari video..." />
+      <input id="searchInput" type="text" placeholder="Cari video...">
       <button id="searchBtn"><i class="fas fa-search"></i></button>
     </div>
-
-    <div class="ad-header" aria-hidden="true">
-      <!-- ADSTERRA 320x50 HEADER - GANTI sid/ad -->
-      <script type="text/javascript">
-	atOptions = {
-		'key' : 'f911d9fd4c8cadde096c6bfbf9d30630',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/f911d9fd4c8cadde096c6bfbf9d30630/invoke.js"></script>
-    </div>
   </header>
-
-  <div class="filters-container">
-    <div class="filters-scroll" id="filters">
-      <button class="filter-btn active">Semua</button>
-      <button class="filter-btn">Action</button>
-      <button class="filter-btn">Drama</button>
-      <button class="filter-btn">Anime</button>
-    </div>
+  <div class="ad-slot">
+    <!-- Slot Header 320x50 Adsterra / bisa diganti -->
+    <iframe src="about:blank" width="320" height="50" style="border:none;"></iframe>
   </div>
-
-  <main>
-    <div id="videoContainer" class="video-grid" aria-live="polite"></div>
-  </main>
+  <div id="videoContainer" class="video-grid"></div>
 </div>
 
-<!-- MODAL -->
-<div id="videoModal" class="modal" aria-hidden="true">
-  <div class="modal-box" role="dialog" aria-modal="true">
-    <div class="modal-head">
-      <div id="modalTitle" class="modal-title">Judul</div>
-      <button id="closeModal" class="modal-close">Tutup</button>
-    </div>
-
-    <div class="modal-body">
-      <div class="modal-left">
-        <div id="modalVideo" class="modal-video"></div>
-      </div>
-
-      <div class="modal-right">
-        <div class="ad-300" id="ad300">
-          <!-- ADSTERRA 300x250 - GANTI sid/ad -->
-          <script type="text/javascript">
-	atOptions = {
-		'key' : 'c4f0b959a9c4b12d8d039c71b3c3e1ec',
-		'format' : 'iframe',
-		'height' : 250,
-		'width' : 300,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/c4f0b959a9c4b12d8d039c71b3c3e1ec/invoke.js"></script>
-        </div>
-
-        <div id="imageGallery" class="gallery-grid" aria-hidden="false"></div>
-      </div>
-    </div>
-
-    <div class="modal-footer">
-      <div id="ad320" class="ad-320">
-        <!-- ADSTERRA 320x50 BAWAH JUDUL - GANTI sid/ad -->
-        <script type="text/javascript">
-	atOptions = {
-		'key' : 'f911d9fd4c8cadde096c6bfbf9d30630',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/f911d9fd4c8cadde096c6bfbf9d30630/invoke.js"></script>
-      </div>
+<!-- MODAL VIDEO -->
+<div id="videoModal" class="modal">
+  <div class="modal-box">
+    <button class="modal-close" id="closeModal">&times;</button>
+    <div class="modal-video-wrap" id="modalVideo"></div>
+    <div class="ad-slot">
+      <!-- Slot 300x250 Banner -->
+      <iframe src="about:blank" width="300" height="250" style="border:none;"></iframe>
     </div>
   </div>
+</div>
+
+<div class="ad-slot" style="text-align:center;margin:20px 0">
+  <!-- Slot Footer 320x50 Adsterra -->
+  <iframe src="about:blank" width="320" height="50" style="border:none;"></iframe>
 </div>
 
 <script>
-/* ======================= CONFIG ======================= */
-// gunakan feed Blogger tanpa API key (JSON feed)
-const BLOG_ID = "4521274187180591519"; // dari bro
-const MAX_POSTS = 40;
+// ===== CONFIG =====
+const BLOG_ID = "4521274187180591519";
+const JSONP_URL = `https://www.blogger.com/feeds/${BLOG_ID}/posts/default?alt=json-in-script`;
 
-/* ======================= HELPERS - THUMBNAIL & PARSE ======================= */
-function placeholder() { return "https://via.placeholder.com/640x360?text=No+Preview"; }
-
-/* create thumbnail from MP4 (canvas snapshot of first frame) */
-function createThumbFromMP4(url, timeout = 9000) {
-  return new Promise((resolve) => {
-    if (!url) return resolve(placeholder());
-    const video = document.createElement("video");
-    video.muted = true;
-    video.preload = "metadata";
-    video.crossOrigin = "anonymous";
-    let done = false;
-    const timer = setTimeout(()=>{ if(!done){ done=true; resolve(placeholder()); try{video.src='';}catch(e){} } }, timeout);
-
-    video.addEventListener("loadeddata", function handler(){
-      try {
-        const w = video.videoWidth || 640;
-        const h = video.videoHeight || 360;
-        const canvas = document.createElement("canvas");
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(video, 0, 0, w, h);
-        const data = canvas.toDataURL("image/jpeg");
-        if(!done){ done=true; clearTimeout(timer); resolve(data); }
-      } catch(e) {
-        if(!done){ done=true; clearTimeout(timer); resolve(placeholder()); }
-      }
-    }, { once: true });
-
-    video.addEventListener("error", ()=>{ if(!done){ done=true; clearTimeout(timer); resolve(placeholder()); } }, { once:true });
-
-    // assign src last
-    try { video.src = url; video.load(); }
-    catch(err){ if(!done){ done=true; clearTimeout(timer); resolve(placeholder()); } }
+// ===== CALLBACK JSONP =====
+function gdataIoCallback(data){
+  const entries = data.feed.entry || [];
+  const container = document.getElementById("videoContainer");
+  container.innerHTML = "";
+  entries.forEach(post=>{
+    const title = post.title.$t;
+    const content = post.content.$t;
+    // Ambil iframe pertama
+    const doc = new DOMParser().parseFromString(content,"text/html");
+    const iframe = doc.querySelector("iframe");
+    if(!iframe) return;
+    // Ambil thumbnail dari src video (frame pertama)
+    let thumb = "https://via.placeholder.com/300x169?text=Video";
+    if(iframe.src.includes(".mp4")){
+      thumb = iframe.src; // untuk mp4 bisa ambil src
+    }
+    const card = document.createElement("div");
+    card.className = "video-card";
+    card.innerHTML = `<div class="video-thumb"><img src="${thumb}" alt="${title}"></div>
+                      <div class="video-info"><h3>${title}</h3></div>`;
+    card.onclick = ()=>openModal(iframe.src);
+    container.appendChild(card);
   });
 }
 
-/* parse HTML string to DOM */
-function toDOM(html){ return new DOMParser().parseFromString(html||"","text/html"); }
-
-/* extract iframe/video/mp4 src from post content */
-function extractSrcFromContent(content){
-  const doc = toDOM(content);
-  const vidTag = doc.querySelector("video");
-  if(vidTag && vidTag.src) return vidTag.src.trim();
-
-  const iframe = doc.querySelector("iframe");
-  if(iframe && iframe.src) return iframe.src.trim();
-
-  // links to mp4
-  const a = doc.querySelector("a[href$='.mp4'], a[href*='.mp4?']");
-  if(a && a.href) return a.href.trim();
-
-  // custom data attributes
-  const dv = doc.querySelector("[data-video]");
-  if(dv && dv.dataset && dv.dataset.video) return dv.dataset.video.trim();
-
-  return "";
-}
-
-/* detect type for building player */
-function detectType(src) {
-  if(!src) return "unknown";
-  const s = src.toLowerCase();
-  if(s.includes(".mp4")) return "mp4";
-  if(s.includes("streamtape")) return "streamtape";
-  if(s.includes("xvideos.com/embedframe/")) return "xvideos-embed";
-  // youtube, vimeo detections can be added
-  if(s.includes("youtube.com")||s.includes("youtu.be")) return "youtube";
-  return "iframe";
-}
-
-/* build player html (mp4 => <video>, else iframe with autoplay param) */
-function buildPlayer(src){
-  const type = detectType(src);
-  if(type === "mp4" || type==="xvideos-embed" || type==="streamtape"){
-    // for xvideos-embed we will convert to mp4 attempt below in thumbnail step; but for playing, prefer original iframe if cross-origin needed
-    if(type==="mp4") return `<video src="${src}" controls autoplay playsinline></video>`;
-    // For xvideos, to avoid cross-origin issues, play via iframe embed
-    if(type==="xvideos-embed" || type==="streamtape") {
-      // if already an embed url - ensure autoplay param present
-      let iframeSrc = src;
-      if(!/autoplay=/.test(iframeSrc)) iframeSrc += (iframeSrc.indexOf('?')===-1 ? '?' : '&') + 'autoplay=1';
-      return `<iframe src="${iframeSrc}" allow="autoplay; fullscreen" allowfullscreen sandbox="allow-scripts allow-same-origin"></iframe>`;
-    }
-  }
-  // default iframe
-  let iframeSrc = src;
-  if(!/autoplay=/.test(iframeSrc)) iframeSrc += (iframeSrc.indexOf('?')===-1 ? '?' : '&') + 'autoplay=1';
-  return `<iframe src="${iframeSrc}" allow="autoplay; fullscreen" allowfullscreen sandbox="allow-scripts allow-same-origin"></iframe>`;
-}
-
-/* special convert: try convert xvideos embedframe -> mp4-download url (best-effort) */
-function tryXVideosMP4(embedSrc){
-  try {
-    const m = embedSrc.match(/\/embedframe\/([^/?#&]+)/i);
-    if(m && m[1]) {
-      const id = m[1];
-      // best-effort direct mp4 endpoint used earlier in testing patterns
-      // NOTE: depending on xvideos policies this may not always exist, but we'll try
-      return `https://www.xvideos.com/video-download/${id}/mp4`;
-    }
-  } catch(e){}
-  return null;
-}
-
-/* escape html for titles */
-function esc(s){ return (s||"").replace(/[&<>"']/g, (m)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
-
-/* ======================= RENDER & MODAL ======================= */
-const videoContainer = document.getElementById("videoContainer");
+// ===== MODAL =====
 const modal = document.getElementById("videoModal");
 const modalVideo = document.getElementById("modalVideo");
-const modalTitle = document.getElementById("modalTitle");
-const imageGallery = document.getElementById("imageGallery");
-const closeModalBtn = document.getElementById("closeModal");
-
-closeModalBtn.addEventListener("click", closeModal);
-modal.addEventListener("click", (e)=>{ if(e.target===modal) closeModal(); });
-
-function closeModal(){
-  modal.classList.remove("open");
-  modal.setAttribute("aria-hidden","true");
-  modalVideo.innerHTML = "";
-  modalTitle.textContent = "";
-  imageGallery.innerHTML = "";
-}
-
-function openModalBy(videoObj){
-  modalTitle.textContent = videoObj.title || "";
-  // build player: for mp4 direct, use video; else use iframe embed
-  modalVideo.innerHTML = buildPlayer(videoObj.playSrc || videoObj.videoSrc || "");
-  // gallery
-  imageGallery.innerHTML = "";
-  (videoObj.gallery || []).forEach(src=>{
-    const im = document.createElement("img");
-    im.src = src;
-    imageGallery.appendChild(im);
-  });
+function openModal(src){
+  modalVideo.innerHTML = `<iframe src="${src}?autoplay=1" allowfullscreen></iframe>`;
   modal.classList.add("open");
-  modal.setAttribute("aria-hidden","false");
 }
+document.getElementById("closeModal").onclick = ()=>{
+  modal.classList.remove("open");
+  modalVideo.innerHTML="";
+};
 
-/* render card and return image element reference */
-function renderCard(videoObj){
-  const card = document.createElement("div");
-  card.className = "video-card";
-  card.dataset.id = videoObj.id;
-
-  const thumbWrap = document.createElement("div");
-  thumbWrap.className = "video-thumb";
-  const img = document.createElement("img");
-  img.alt = videoObj.title || "Video";
-  img.src = videoObj.thumbnail || placeholder();
-  thumbWrap.appendChild(img);
-
-  const overlay = document.createElement("div");
-  overlay.className = "play-overlay";
-  overlay.innerHTML = `<div class="circle"><i class="fas fa-play"></i></div>`;
-  thumbWrap.appendChild(overlay);
-
-  const info = document.createElement("div");
-  info.className = "video-info";
-  info.innerHTML = `<h3>${esc(videoObj.title)}</h3>`;
-
-  card.appendChild(thumbWrap);
-  card.appendChild(info);
-
-  card.addEventListener("click", ()=>openModalBy(videoObj));
-  videoContainer.appendChild(card);
-  return img;
-}
-
-/* ======================= FETCH and PROCESS POSTS ======================= */
-async function loadFromBlogger() {
-  videoContainer.innerHTML = "";
-  try {
-    const feedUrl = `https://www.blogger.com/feeds/${BLOG_ID}/posts/default?alt=json&max-results=${MAX_POSTS}`;
-    const res = await fetch(feedUrl);
-    const data = await res.json();
-
-    const entries = (data.feed && data.feed.entry) ? data.feed.entry : [];
-    if(!entries.length){
-      videoContainer.innerHTML = `<p style="padding:16px;color:#bbb">Tidak ada postingan.</p>`;
-      return;
-    }
-
-    // build minimal objects and render placeholders fast
-    const objs = [];
-    const imgRefs = {};
-    for(const e of entries){
-      const title = e.title && e.title.$t ? e.title.$t : "No title";
-      const content = e.content && e.content.$t ? e.content.$t : "";
-      const labels = (e.category || []).map(c => c.term ? c.term : "").filter(Boolean);
-      const galleryRaw = (()=>{ try{ const doc = toDOM(content); const g = doc.querySelector(".gallery")?.textContent?.trim(); return g ? g.split(",").map(x=>x.trim()).filter(Boolean) : []; }catch(e){return [];} })();
-
-      const videoSrc = extractSrcFromContent(content);
-      const obj = {
-        id: e.id && e.id.$t ? e.id.$t : Math.random().toString(36).slice(2),
-        title, content, labels, gallery: galleryRaw, videoSrc,
-        thumbnail: placeholder(), // will be replaced
-        playSrc: null
-      };
-      objs.push(obj);
-      // render card now
-      imgRefs[obj.id] = renderCard(obj);
-    }
-
-    // resolve thumbnails one-by-one (avoids too many parallel video loads)
-    for(const obj of objs){
-      try {
-        // try manual thumbnail inside post first (<img class="thumbnail">)
-        const doc = toDOM(obj.content);
-        const manual = doc.querySelector(".thumbnail, img.thumbnail");
-        if(manual && manual.src){
-          obj.thumbnail = manual.src;
-          imgRefs[obj.id].src = obj.thumbnail;
-          // set playable src if video tag present
-          if(doc.querySelector("video") && doc.querySelector("video").src) obj.playSrc = doc.querySelector("video").src;
-          continue;
-        }
-
-        const src = obj.videoSrc || "";
-        const type = detectType(src);
-
-        if(type === "mp4"){
-          // direct mp4 - generate thumbnail from mp4 and set playSrc to mp4
-          const thumb = await createThumbFromMP4(src);
-          obj.thumbnail = thumb || placeholder();
-          obj.playSrc = src;
-        } else if(type === "xvideos-embed"){
-          // try convert to mp4 download url; if success try snapshot
-          const mp4 = tryXVideosMP4(src);
-          if(mp4){
-            const thumb = await createThumbFromMP4(mp4);
-            obj.thumbnail = thumb || placeholder();
-            // prefer using embed iframe for playing (some hosts require embed)
-            obj.playSrc = src; // keep original embed for playback
-          } else {
-            obj.thumbnail = placeholder();
-            obj.playSrc = src;
-          }
-        } else if(type === "streamtape"){
-          // streamtape often blocks snapshot -> fallback to placeholder, playback via iframe
-          obj.thumbnail = placeholder();
-          obj.playSrc = src;
-        } else if(type === "youtube"){
-          const m = src.match(/(?:youtube\.com\/embed\/|watch\?v=|youtu\.be\/)([\w-]{11})/);
-          if(m && m[1]){
-            obj.thumbnail = `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg`;
-            obj.playSrc = `https://www.youtube.com/embed/${m[1]}?autoplay=1`;
-          } else {
-            obj.thumbnail = placeholder();
-            obj.playSrc = src;
-          }
-        } else if(type === "iframe"){
-          // generic iframe: can't snapshot cross-origin => placeholder and play using iframe
-          obj.thumbnail = placeholder();
-          obj.playSrc = src;
-        } else {
-          obj.thumbnail = placeholder();
-          obj.playSrc = src;
-        }
-      } catch(err){
-        obj.thumbnail = placeholder();
-        obj.playSrc = obj.videoSrc || "";
-      }
-      // update DOM img if present
-      const imgEl = imgRefs[obj.id];
-      if(imgEl) imgEl.src = obj.thumbnail;
-    }
-
-    // store to global for search/filter operations
-    window._aisah_videos = objs;
-
-  } catch(err){
-    console.error("Load error:", err);
-    videoContainer.innerHTML = `<p style="padding:16px;color:#bbb">Gagal memuat posting dari Blogger.</p>`;
-  }
-}
-
-/* ======================= FILTER & SEARCH ======================= */
-function initUI(){
-  // filters
-  document.querySelectorAll(".filter-btn").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
-      btn.classList.add("active");
-      const label = btn.textContent.trim().toLowerCase();
-      const all = window._aisah_videos || [];
-      const list = label === "semua" ? all : all.filter(v=> (v.labels||[]).map(x=>x.toLowerCase()).includes(label));
-      // re-render grid
-      videoContainer.innerHTML = "";
-      list.forEach(v => renderCard(v));
-    });
+// ===== SEARCH =====
+document.getElementById("searchBtn").onclick = searchVideos;
+document.getElementById("searchInput").addEventListener("keypress", function(e){
+  if(e.key==="Enter") searchVideos();
+});
+function searchVideos(){
+  const term = document.getElementById("searchInput").value.toLowerCase();
+  const cards = document.querySelectorAll("#videoContainer .video-card");
+  cards.forEach(card=>{
+    const title = card.querySelector("h3").textContent.toLowerCase();
+    card.style.display = title.includes(term) ? "block" : "none";
   });
-
-  // search
-  document.getElementById("searchBtn").addEventListener("click", doSearch);
-  document.getElementById("searchInput").addEventListener("keypress", (e)=>{ if(e.key === "Enter") doSearch(); });
-
-  function doSearch(){
-    const q = (document.getElementById("searchInput").value||"").trim().toLowerCase();
-    const all = window._aisah_videos || [];
-    const list = q ? all.filter(v=> (v.title||"").toLowerCase().includes(q) ) : all;
-    videoContainer.innerHTML = "";
-    list.forEach(v=> renderCard(v));
-  }
 }
 
-/* ======================= INIT ======================= */
-(async function init(){
-  await loadFromBlogger();
-  initUI();
-})();
+// ===== LOAD JSONP =====
+const script = document.createElement("script");
+script.src = JSONP_URL + "&callback=gdataIoCallback";
+document.body.appendChild(script);
 </script>
 </body>
 </html>
