@@ -1,83 +1,88 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aisah-Video</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:"Segoe UI",Arial,sans-serif;background:#f7f7f7;color:#222}
-.container{width:94%;max-width:1150px;margin:20px auto}
-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px}
-.logo{display:flex;align-items:center;gap:8px}
-.logo i{font-size:1.6rem;color:#ff5314}
-.logo h1{font-size:1.2rem;font-weight:700;display:inline-block;}
-.ad-top{margin-left:10px;flex-shrink:0;}
-.search-bar{flex:1;display:flex;max-width:520px;margin-left:12px;min-width:200px}
-.search-bar input{flex:1;padding:9px 12px;border:1px solid #ddd;border-radius:6px 0 0 6px}
-.search-bar button{background:#2a2a2a;color:white;padding:0 14px;border-radius:0 6px 6px 0}
-.nav-links a{margin-left:12px;color:#777;text-decoration:none;font-size:.9rem}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Aisah-Video (Paralel Blogger + GitHub + Netlify)</title>
 
-.filters-container{position:relative;margin:14px 0;overflow:hidden;}
-.filters-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;}
-.filters-scroll::-webkit-scrollbar{display:none}
-.filter-btn{padding:8px 14px;border:1px solid #eee;border-radius:20px;background:#fff;cursor:pointer;color:#666;font-weight:600;font-size:0.87rem;white-space:nowrap;flex-shrink:0;}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* ----- BASIC / LAYOUT ----- */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter, "Segoe UI", Arial, sans-serif;background:#0f0f10;color:#fff;line-height:1.4}
+.container{width:94%;max-width:1150px;margin:18px auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0}
+.logo{display:flex;align-items:center;gap:10px}
+.logo i{font-size:1.6rem;color:#ff5314}
+.logo h1{font-size:1.1rem;font-weight:700}
+.search-bar{flex:1;max-width:520px;display:flex}
+.search-bar input{flex:1;padding:9px;border-radius:6px 0 0 6px;border:1px solid #333;background:#0b0b0c;color:#fff}
+.search-bar button{padding:0 14px;border-radius:0 6px 6px 0;border:0;background:#222;color:#fff;cursor:pointer}
+.ad-header{width:320px;height:50px;background:#1b1b1d;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#ddd;font-size:12px}
+
+/* filters */
+.filters-container{margin:14px 0;overflow:hidden}
+.filters-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px}
+.filter-btn{padding:8px 12px;border-radius:18px;border:1px solid #222;background:#0f0f10;color:#ddd;cursor:pointer;white-space:nowrap}
 .filter-btn.active{background:#ff5314;color:#fff;border-color:#ff5314}
 
-.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
-.video-card{background:white;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.06);overflow:hidden;transition:.2s;cursor:pointer}
+/* grid */
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:14px}
+.video-card{background:#111;border-radius:10px;overflow:hidden;cursor:pointer;border:1px solid #1f1f1f;transition:transform .14s}
 .video-card:hover{transform:translateY(-6px)}
-.video-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#f3f3f3}
-.video-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.video-thumb{position:relative;display:block;width:100%;aspect-ratio:16/9;background:#0b0b0b;overflow:hidden}
+.video-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.play-overlay .circle{width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff}
 .video-info{padding:10px}
-.video-info h3{font-size:0.78rem;font-weight:500;line-height:1.2;height:36px;overflow:hidden;text-overflow:ellipsis}
+.video-info h3{font-size:0.9rem;color:#fff;font-weight:600;height:40px;overflow:hidden}
 
-/* MODAL STYLING */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;padding:5px;z-index:1500;}
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;padding:10px;z-index:2000}
 .modal.open{display:flex}
-.modal-box{background:white;width:100%;max-width:1000px;max-height:95vh;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.35)}
-.modal-close{position:absolute;top:10px;right:10px;width:35px;height:35px;border-radius:50%;background:rgba(0,0,0,.45);color:white;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;z-index:10}
+.modal-box{width:100%;max-width:980px;border-radius:12px;background:#070707;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.7)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid #151515}
+.modal-title{font-size:1rem;font-weight:700}
+.modal-close{background:#ff3b3b;border:0;color:#fff;padding:6px 10px;border-radius:8px;cursor:pointer}
+.modal-body{display:flex;gap:12px;align-items:flex-start;padding:12px;flex-wrap:wrap}
+.modal-left{flex:2;min-width:260px}
+.modal-video{width:100%;aspect-ratio:16/9;background:#000;position:relative}
+.modal-video iframe,.modal-video video{position:absolute;inset:0;width:100%;height:100%;border:0}
+.modal-right{width:300px;max-width:32%;display:flex;flex-direction:column;gap:8px}
+.ad-300{width:100%;height:250px;background:#111;border:1px dashed #222;display:flex;align-items:center;justify-content:center;color:#bbb}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,72px);gap:6px;justify-content:center}
+.gallery-grid img{width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid #222}
 
-.modal-content-row{display:flex;gap:10px;flex:1;overflow:auto;align-items:flex-start}
-.modal-left{flex:2}
-.modal-right{flex:1;display:flex;flex-direction:column;gap:6px}
+/* modal footer ad */
+.modal-footer{padding:10px;border-top:1px solid #151515;display:flex;align-items:center;gap:8px}
+.ad-320{width:320px;height:50px;background:#111;border:1px dashed #222;display:flex;align-items:center;justify-content:center;color:#bbb}
 
-.modal-video-wrap{position:relative;width:100%;aspect-ratio:16/9;background:black}
-.modal-video-wrap iframe,.modal-video-wrap video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;border:0}
-
-.image-grid{display:grid;grid-template-columns:repeat(auto-fill,70px);grid-auto-rows:70px;gap:5px;justify-content:start}
-.image-grid img{width:70px;height:70px;object-fit:cover;border-radius:6px;cursor:pointer;border:1px solid #eee;background:#f3f3f3}
-
-.modal-details{padding:10px 12px;border-top:1px solid #eee;margin-top:-4px}
-.modal-details h3{font-size:1.1rem;margin-bottom:6px;text-align:left;}
-
-/* MEDIA QUERIES MOBILE */
-@media(max-width:768px){
-    header{flex-direction:column;align-items:stretch;gap:10px}
-    .search-bar{margin-left:0;max-width:100%}
-    .video-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
-    .modal-content-row{flex-direction:column}
-    .modal-right{flex:none;order:2;align-items:center}
-    .image-grid{grid-template-columns:repeat(auto-fill,60px);grid-auto-rows:60px;justify-content:center}
-    .modal-video-wrap{aspect-ratio:16/9}
+/* responsive */
+@media(max-width:900px){
+  .modal-body{flex-direction:column}
+  .modal-right{width:100%;max-width:none}
 }
 @media(max-width:480px){
-    .video-grid{grid-template-columns:repeat(2,1fr);gap:10px}
-    .video-info h3{font-size:0.75rem;height:32px}
-    .image-grid{grid-template-columns:repeat(auto-fill,50px);grid-auto-rows:50px}
+  .video-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .logo h1{font-size:1rem}
+  .ad-header{display:none}
 }
 </style>
 </head>
 <body>
 <div class="container">
-    <!-- HEADER -->
-    <header>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <div class="logo"><i class="fas fa-play-circle"></i><h1>Aisah-Video</h1></div>
-            <div class="ad-top">
-                <!-- Adsterra 320x50 Header -->
-                <script type="text/javascript">
+  <header>
+    <div class="logo"><i class="fas fa-play-circle"></i><h1>Aisah-Video</h1></div>
+
+    <div class="search-bar">
+      <input id="searchInput" placeholder="Cari video..." />
+      <button id="searchBtn"><i class="fas fa-search"></i></button>
+    </div>
+
+    <div class="ad-header" aria-hidden="true">
+      <!-- ADSTERRA 320x50 HEADER - GANTI sid/ad -->
+      <script type="text/javascript">
 	atOptions = {
 		'key' : 'f911d9fd4c8cadde096c6bfbf9d30630',
 		'format' : 'iframe',
@@ -87,43 +92,40 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 	};
 </script>
 <script type="text/javascript" src="//www.highperformanceformat.com/f911d9fd4c8cadde096c6bfbf9d30630/invoke.js"></script>
-            </div>
-            <div class="search-bar">
-                <input id="searchInput" type="text" placeholder="Cari video...">
-                <button><i class="fas fa-search"></i></button>
-            </div>
-        </div>
-        <nav class="nav-links">
-            <a>Beranda</a>
-            <a>Kategori</a>
-        </nav>
-    </header>
-
-    <!-- FILTER -->
-    <div class="filters-container">
-        <div class="filters-scroll">
-            <button class="filter-btn active">Semua</button>
-            <button class="filter-btn">Action</button>
-            <button class="filter-btn">Drama</button>
-            <button class="filter-btn">Anime</button>
-        </div>
     </div>
+  </header>
 
-    <!-- VIDEO GRID -->
-    <div id="videoContainer" class="video-grid"></div>
+  <div class="filters-container">
+    <div class="filters-scroll" id="filters">
+      <button class="filter-btn active">Semua</button>
+      <button class="filter-btn">Action</button>
+      <button class="filter-btn">Drama</button>
+      <button class="filter-btn">Anime</button>
+    </div>
+  </div>
+
+  <main>
+    <div id="videoContainer" class="video-grid" aria-live="polite"></div>
+  </main>
 </div>
 
-<!-- MODAL VIDEO -->
-<div id="videoModal" class="modal">
-    <div class="modal-box">
-        <button class="modal-close" id="closeModal">&times;</button>
-        <div class="modal-content-row">
-            <div class="modal-left">
-                <div class="modal-video-wrap" id="modalVideo"></div>
-            </div>
-            <div class="modal-right">
-                <!-- Adsterra 300x250 -->
-                <script type="text/javascript">
+<!-- MODAL -->
+<div id="videoModal" class="modal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div id="modalTitle" class="modal-title">Judul</div>
+      <button id="closeModal" class="modal-close">Tutup</button>
+    </div>
+
+    <div class="modal-body">
+      <div class="modal-left">
+        <div id="modalVideo" class="modal-video"></div>
+      </div>
+
+      <div class="modal-right">
+        <div class="ad-300" id="ad300">
+          <!-- ADSTERRA 300x250 - GANTI sid/ad -->
+          <script type="text/javascript">
 	atOptions = {
 		'key' : 'c4f0b959a9c4b12d8d039c71b3c3e1ec',
 		'format' : 'iframe',
@@ -133,13 +135,16 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 	};
 </script>
 <script type="text/javascript" src="//www.highperformanceformat.com/c4f0b959a9c4b12d8d039c71b3c3e1ec/invoke.js"></script>
-                <div class="image-grid" id="imageGallery"></div>
-            </div>
         </div>
-        <div class="modal-details">
-            <h3 id="modalTitle"></h3>
-            <!-- Adsterra 320x50 bawah judul -->
-            <script type="text/javascript">
+
+        <div id="imageGallery" class="gallery-grid" aria-hidden="false"></div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div id="ad320" class="ad-320">
+        <!-- ADSTERRA 320x50 BAWAH JUDUL - GANTI sid/ad -->
+        <script type="text/javascript">
 	atOptions = {
 		'key' : 'f911d9fd4c8cadde096c6bfbf9d30630',
 		'format' : 'iframe',
@@ -149,130 +154,333 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
 	};
 </script>
 <script type="text/javascript" src="//www.highperformanceformat.com/f911d9fd4c8cadde096c6bfbf9d30630/invoke.js"></script>
-        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
-const BLOG_ID="4521274187180591519";
-const API_KEY="AIzaSyA8k0Fr9m-7zsC1EzdOjI3kgMR92bJHs_E";
-const videoContainer=document.getElementById("videoContainer");
-let currentVideos=[];
+/* ======================= CONFIG ======================= */
+// gunakan feed Blogger tanpa API key (JSON feed)
+const BLOG_ID = "4521274187180591519"; // dari bro
+const MAX_POSTS = 40;
 
-// Ambil frame pertama video MP4 sebagai thumbnail
-function getVideoThumbnail(url){
-    return new Promise(resolve=>{
-        if(!url) return resolve("https://via.placeholder.com/600x400?text=No+Image");
-        const video=document.createElement('video');
-        video.src=url;
-        video.crossOrigin="anonymous";
-        video.muted=true;
-        video.addEventListener('loadeddata',()=>{
-            const canvas=document.createElement('canvas');
-            canvas.width=video.videoWidth;
-            canvas.height=video.videoHeight;
-            canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
-            resolve(canvas.toDataURL('image/jpeg'));
-        });
-        video.addEventListener('error',()=>resolve("https://via.placeholder.com/600x400?text=No+Image"));
-    });
+/* ======================= HELPERS - THUMBNAIL & PARSE ======================= */
+function placeholder() { return "https://via.placeholder.com/640x360?text=No+Preview"; }
+
+/* create thumbnail from MP4 (canvas snapshot of first frame) */
+function createThumbFromMP4(url, timeout = 9000) {
+  return new Promise((resolve) => {
+    if (!url) return resolve(placeholder());
+    const video = document.createElement("video");
+    video.muted = true;
+    video.preload = "metadata";
+    video.crossOrigin = "anonymous";
+    let done = false;
+    const timer = setTimeout(()=>{ if(!done){ done=true; resolve(placeholder()); try{video.src='';}catch(e){} } }, timeout);
+
+    video.addEventListener("loadeddata", function handler(){
+      try {
+        const w = video.videoWidth || 640;
+        const h = video.videoHeight || 360;
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(video, 0, 0, w, h);
+        const data = canvas.toDataURL("image/jpeg");
+        if(!done){ done=true; clearTimeout(timer); resolve(data); }
+      } catch(e) {
+        if(!done){ done=true; clearTimeout(timer); resolve(placeholder()); }
+      }
+    }, { once: true });
+
+    video.addEventListener("error", ()=>{ if(!done){ done=true; clearTimeout(timer); resolve(placeholder()); } }, { once:true });
+
+    // assign src last
+    try { video.src = url; video.load(); }
+    catch(err){ if(!done){ done=true; clearTimeout(timer); resolve(placeholder()); } }
+  });
 }
 
-function parseHTML(post){return new DOMParser().parseFromString(post.content||"","text/html")}
-function extractVideoUrl(p){const doc=parseHTML(p);return doc.querySelector("iframe")?.src||doc.querySelector("video")?.src||"";}
-function extractGallery(p){const doc=parseHTML(p);const raw=doc.querySelector(".gallery")?.textContent?.trim();if(!raw)return[];return raw.split(",").map(x=>x.trim()).filter(x=>x.length>5);}
-function extractTitle(p){return p.title||"No Title";}
-function extractThumbnail(p){
-    const doc=parseHTML(p);
-    const iframe=doc.querySelector("iframe");
-    if(iframe){
-        const src=iframe.src;
-        const ytMatch=src.match(/(?:youtube\.com\/embed\/|youtu\.be\/)([\w-]{11})/);
-        if(ytMatch) return `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`;
+/* parse HTML string to DOM */
+function toDOM(html){ return new DOMParser().parseFromString(html||"","text/html"); }
+
+/* extract iframe/video/mp4 src from post content */
+function extractSrcFromContent(content){
+  const doc = toDOM(content);
+  const vidTag = doc.querySelector("video");
+  if(vidTag && vidTag.src) return vidTag.src.trim();
+
+  const iframe = doc.querySelector("iframe");
+  if(iframe && iframe.src) return iframe.src.trim();
+
+  // links to mp4
+  const a = doc.querySelector("a[href$='.mp4'], a[href*='.mp4?']");
+  if(a && a.href) return a.href.trim();
+
+  // custom data attributes
+  const dv = doc.querySelector("[data-video]");
+  if(dv && dv.dataset && dv.dataset.video) return dv.dataset.video.trim();
+
+  return "";
+}
+
+/* detect type for building player */
+function detectType(src) {
+  if(!src) return "unknown";
+  const s = src.toLowerCase();
+  if(s.includes(".mp4")) return "mp4";
+  if(s.includes("streamtape")) return "streamtape";
+  if(s.includes("xvideos.com/embedframe/")) return "xvideos-embed";
+  // youtube, vimeo detections can be added
+  if(s.includes("youtube.com")||s.includes("youtu.be")) return "youtube";
+  return "iframe";
+}
+
+/* build player html (mp4 => <video>, else iframe with autoplay param) */
+function buildPlayer(src){
+  const type = detectType(src);
+  if(type === "mp4" || type==="xvideos-embed" || type==="streamtape"){
+    // for xvideos-embed we will convert to mp4 attempt below in thumbnail step; but for playing, prefer original iframe if cross-origin needed
+    if(type==="mp4") return `<video src="${src}" controls autoplay playsinline></video>`;
+    // For xvideos, to avoid cross-origin issues, play via iframe embed
+    if(type==="xvideos-embed" || type==="streamtape") {
+      // if already an embed url - ensure autoplay param present
+      let iframeSrc = src;
+      if(!/autoplay=/.test(iframeSrc)) iframeSrc += (iframeSrc.indexOf('?')===-1 ? '?' : '&') + 'autoplay=1';
+      return `<iframe src="${iframeSrc}" allow="autoplay; fullscreen" allowfullscreen sandbox="allow-scripts allow-same-origin"></iframe>`;
     }
-    const videoTag=doc.querySelector("video");
-    if(videoTag) return getVideoThumbnail(videoTag.src);
-    return Promise.resolve(doc.querySelector("img")?.src||"https://via.placeholder.com/600x400?text=No+Image");
+  }
+  // default iframe
+  let iframeSrc = src;
+  if(!/autoplay=/.test(iframeSrc)) iframeSrc += (iframeSrc.indexOf('?')===-1 ? '?' : '&') + 'autoplay=1';
+  return `<iframe src="${iframeSrc}" allow="autoplay; fullscreen" allowfullscreen sandbox="allow-scripts allow-same-origin"></iframe>`;
 }
 
-async function loadVideos(){
-    const url=`https://www.googleapis.com/blogger/v3/blogs/${BLOG_ID}/posts?key=${API_KEY}&maxResults=30`;
-    const res=await fetch(url);
-    const data=await res.json();
-    currentVideos=[];
-    for(const p of data.items){
-        const vidUrl=extractVideoUrl(p);
-        const thumb=await extractThumbnail(p);
-        currentVideos.push({
-            id:p.id,
-            title:extractTitle(p),
-            videoUrl:vidUrl,
-            thumbnail:thumb,
-            gallery:extractGallery(p),
-            labels:p.labels||[]
-        });
+/* special convert: try convert xvideos embedframe -> mp4-download url (best-effort) */
+function tryXVideosMP4(embedSrc){
+  try {
+    const m = embedSrc.match(/\/embedframe\/([^/?#&]+)/i);
+    if(m && m[1]) {
+      const id = m[1];
+      // best-effort direct mp4 endpoint used earlier in testing patterns
+      // NOTE: depending on xvideos policies this may not always exist, but we'll try
+      return `https://www.xvideos.com/video-download/${id}/mp4`;
     }
-    renderList(currentVideos);
-    initFilters();
+  } catch(e){}
+  return null;
 }
 
-function renderList(list){
-    videoContainer.innerHTML="";
-    list.forEach(v=>{
-        const card=document.createElement("div");
-        card.className="video-card";
-        card.innerHTML=`
-            <div class="video-thumb"><img src="${v.thumbnail}" alt="${v.title}"></div>
-            <div class="video-info"><h3>${v.title}</h3></div>
-        `;
-        card.onclick=()=>openModal(v.id);
-        videoContainer.appendChild(card);
+/* escape html for titles */
+function esc(s){ return (s||"").replace(/[&<>"']/g, (m)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+/* ======================= RENDER & MODAL ======================= */
+const videoContainer = document.getElementById("videoContainer");
+const modal = document.getElementById("videoModal");
+const modalVideo = document.getElementById("modalVideo");
+const modalTitle = document.getElementById("modalTitle");
+const imageGallery = document.getElementById("imageGallery");
+const closeModalBtn = document.getElementById("closeModal");
+
+closeModalBtn.addEventListener("click", closeModal);
+modal.addEventListener("click", (e)=>{ if(e.target===modal) closeModal(); });
+
+function closeModal(){
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden","true");
+  modalVideo.innerHTML = "";
+  modalTitle.textContent = "";
+  imageGallery.innerHTML = "";
+}
+
+function openModalBy(videoObj){
+  modalTitle.textContent = videoObj.title || "";
+  // build player: for mp4 direct, use video; else use iframe embed
+  modalVideo.innerHTML = buildPlayer(videoObj.playSrc || videoObj.videoSrc || "");
+  // gallery
+  imageGallery.innerHTML = "";
+  (videoObj.gallery || []).forEach(src=>{
+    const im = document.createElement("img");
+    im.src = src;
+    imageGallery.appendChild(im);
+  });
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden","false");
+}
+
+/* render card and return image element reference */
+function renderCard(videoObj){
+  const card = document.createElement("div");
+  card.className = "video-card";
+  card.dataset.id = videoObj.id;
+
+  const thumbWrap = document.createElement("div");
+  thumbWrap.className = "video-thumb";
+  const img = document.createElement("img");
+  img.alt = videoObj.title || "Video";
+  img.src = videoObj.thumbnail || placeholder();
+  thumbWrap.appendChild(img);
+
+  const overlay = document.createElement("div");
+  overlay.className = "play-overlay";
+  overlay.innerHTML = `<div class="circle"><i class="fas fa-play"></i></div>`;
+  thumbWrap.appendChild(overlay);
+
+  const info = document.createElement("div");
+  info.className = "video-info";
+  info.innerHTML = `<h3>${esc(videoObj.title)}</h3>`;
+
+  card.appendChild(thumbWrap);
+  card.appendChild(info);
+
+  card.addEventListener("click", ()=>openModalBy(videoObj));
+  videoContainer.appendChild(card);
+  return img;
+}
+
+/* ======================= FETCH and PROCESS POSTS ======================= */
+async function loadFromBlogger() {
+  videoContainer.innerHTML = "";
+  try {
+    const feedUrl = `https://www.blogger.com/feeds/${BLOG_ID}/posts/default?alt=json&max-results=${MAX_POSTS}`;
+    const res = await fetch(feedUrl);
+    const data = await res.json();
+
+    const entries = (data.feed && data.feed.entry) ? data.feed.entry : [];
+    if(!entries.length){
+      videoContainer.innerHTML = `<p style="padding:16px;color:#bbb">Tidak ada postingan.</p>`;
+      return;
+    }
+
+    // build minimal objects and render placeholders fast
+    const objs = [];
+    const imgRefs = {};
+    for(const e of entries){
+      const title = e.title && e.title.$t ? e.title.$t : "No title";
+      const content = e.content && e.content.$t ? e.content.$t : "";
+      const labels = (e.category || []).map(c => c.term ? c.term : "").filter(Boolean);
+      const galleryRaw = (()=>{ try{ const doc = toDOM(content); const g = doc.querySelector(".gallery")?.textContent?.trim(); return g ? g.split(",").map(x=>x.trim()).filter(Boolean) : []; }catch(e){return [];} })();
+
+      const videoSrc = extractSrcFromContent(content);
+      const obj = {
+        id: e.id && e.id.$t ? e.id.$t : Math.random().toString(36).slice(2),
+        title, content, labels, gallery: galleryRaw, videoSrc,
+        thumbnail: placeholder(), // will be replaced
+        playSrc: null
+      };
+      objs.push(obj);
+      // render card now
+      imgRefs[obj.id] = renderCard(obj);
+    }
+
+    // resolve thumbnails one-by-one (avoids too many parallel video loads)
+    for(const obj of objs){
+      try {
+        // try manual thumbnail inside post first (<img class="thumbnail">)
+        const doc = toDOM(obj.content);
+        const manual = doc.querySelector(".thumbnail, img.thumbnail");
+        if(manual && manual.src){
+          obj.thumbnail = manual.src;
+          imgRefs[obj.id].src = obj.thumbnail;
+          // set playable src if video tag present
+          if(doc.querySelector("video") && doc.querySelector("video").src) obj.playSrc = doc.querySelector("video").src;
+          continue;
+        }
+
+        const src = obj.videoSrc || "";
+        const type = detectType(src);
+
+        if(type === "mp4"){
+          // direct mp4 - generate thumbnail from mp4 and set playSrc to mp4
+          const thumb = await createThumbFromMP4(src);
+          obj.thumbnail = thumb || placeholder();
+          obj.playSrc = src;
+        } else if(type === "xvideos-embed"){
+          // try convert to mp4 download url; if success try snapshot
+          const mp4 = tryXVideosMP4(src);
+          if(mp4){
+            const thumb = await createThumbFromMP4(mp4);
+            obj.thumbnail = thumb || placeholder();
+            // prefer using embed iframe for playing (some hosts require embed)
+            obj.playSrc = src; // keep original embed for playback
+          } else {
+            obj.thumbnail = placeholder();
+            obj.playSrc = src;
+          }
+        } else if(type === "streamtape"){
+          // streamtape often blocks snapshot -> fallback to placeholder, playback via iframe
+          obj.thumbnail = placeholder();
+          obj.playSrc = src;
+        } else if(type === "youtube"){
+          const m = src.match(/(?:youtube\.com\/embed\/|watch\?v=|youtu\.be\/)([\w-]{11})/);
+          if(m && m[1]){
+            obj.thumbnail = `https://img.youtube.com/vi/${m[1]}/hqdefault.jpg`;
+            obj.playSrc = `https://www.youtube.com/embed/${m[1]}?autoplay=1`;
+          } else {
+            obj.thumbnail = placeholder();
+            obj.playSrc = src;
+          }
+        } else if(type === "iframe"){
+          // generic iframe: can't snapshot cross-origin => placeholder and play using iframe
+          obj.thumbnail = placeholder();
+          obj.playSrc = src;
+        } else {
+          obj.thumbnail = placeholder();
+          obj.playSrc = src;
+        }
+      } catch(err){
+        obj.thumbnail = placeholder();
+        obj.playSrc = obj.videoSrc || "";
+      }
+      // update DOM img if present
+      const imgEl = imgRefs[obj.id];
+      if(imgEl) imgEl.src = obj.thumbnail;
+    }
+
+    // store to global for search/filter operations
+    window._aisah_videos = objs;
+
+  } catch(err){
+    console.error("Load error:", err);
+    videoContainer.innerHTML = `<p style="padding:16px;color:#bbb">Gagal memuat posting dari Blogger.</p>`;
+  }
+}
+
+/* ======================= FILTER & SEARCH ======================= */
+function initUI(){
+  // filters
+  document.querySelectorAll(".filter-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      const label = btn.textContent.trim().toLowerCase();
+      const all = window._aisah_videos || [];
+      const list = label === "semua" ? all : all.filter(v=> (v.labels||[]).map(x=>x.toLowerCase()).includes(label));
+      // re-render grid
+      videoContainer.innerHTML = "";
+      list.forEach(v => renderCard(v));
     });
+  });
+
+  // search
+  document.getElementById("searchBtn").addEventListener("click", doSearch);
+  document.getElementById("searchInput").addEventListener("keypress", (e)=>{ if(e.key === "Enter") doSearch(); });
+
+  function doSearch(){
+    const q = (document.getElementById("searchInput").value||"").trim().toLowerCase();
+    const all = window._aisah_videos || [];
+    const list = q ? all.filter(v=> (v.title||"").toLowerCase().includes(q) ) : all;
+    videoContainer.innerHTML = "";
+    list.forEach(v=> renderCard(v));
+  }
 }
 
-function openModal(id){
-    const v=currentVideos.find(x=>x.id===id);
-    if(!v)return;
-    document.getElementById("modalTitle").textContent=v.title;
-    document.getElementById("modalVideo").innerHTML=`<iframe src="${v.videoUrl}?autoplay=1" allowfullscreen></iframe>`;
-    const grid=document.getElementById("imageGallery");
-    grid.innerHTML="";
-    v.gallery.forEach((src,i)=>{
-        const img=document.createElement("img");
-        img.src=src;
-        img.alt=`Gambar ${i+1}`;
-        grid.appendChild(img);
-    });
-    document.getElementById("videoModal").classList.add("open");
-}
-
-document.getElementById("closeModal").onclick=()=>{document.getElementById("videoModal").classList.remove("open");document.getElementById("modalVideo").innerHTML="";};
-
-function initFilters(){
-    document.querySelectorAll('.filter-btn').forEach(btn=>{
-        btn.onclick=()=>{
-            document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-            btn.classList.add('active');
-            const label=btn.textContent.trim().toLowerCase();
-            if(label==="semua"){renderList(currentVideos);}
-            else{
-                const filtered=currentVideos.filter(v=>(v.labels||[]).map(x=>x.toLowerCase()).includes(label));
-                renderList(filtered);
-            }
-        };
-    });
-}
-
-document.querySelector('.search-bar button').addEventListener('click', performSearch);
-document.getElementById('searchInput').addEventListener('keypress', function(e){if(e.key==='Enter'){performSearch();}});
-function performSearch(){
-    const searchTerm=document.getElementById('searchInput').value.toLowerCase().trim();
-    if(searchTerm===''){renderList(currentVideos);return;}
-    const filtered=currentVideos.filter(v=>v.title.toLowerCase().includes(searchTerm));
-    renderList(filtered);
-}
-
-loadVideos();
+/* ======================= INIT ======================= */
+(async function init(){
+  await loadFromBlogger();
+  initUI();
+})();
 </script>
 </body>
 </html>
