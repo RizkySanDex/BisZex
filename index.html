@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aisah Video</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:"Segoe UI",Arial,sans-serif;background:#111;color:#fff}
@@ -24,7 +23,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
 .video-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#222}
 .video-thumb img{width:100%;height:100%;object-fit:cover}
 .video-info{padding:8px}
-.video-info h3{font-size:0.85rem;line-height:1.2;overflow:hidden;height:40px}
+.video-info h3{font-size:0.85rem;line-height:1.2;overflow:hidden;height:40px;text-align:center}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;align-items:center;justify-content:center;padding:10px;z-index:1500}
 .modal.open{display:flex}
 .modal-box{background:#111;width:100%;max-width:1000px;border-radius:12px;overflow:hidden;position:relative;display:flex;flex-direction:column}
@@ -37,6 +36,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
 </style>
 </head>
 <body>
+
 <div class="container">
   <header>
     <div class="logo"><i class="fas fa-play-circle"></i><h1>Aisah Video</h1></div>
@@ -68,6 +68,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
   <div class="modal-box">
     <button class="modal-close" id="closeModal">&times;</button>
     <div class="modal-video-wrap" id="modalVideo"></div>
+
     <!-- MODAL AD 300x250 -->
     <div class="ad-slot">
       <script type="text/javascript">
@@ -99,7 +100,7 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
 </div>
 
 <script>
-// ===== CONFIG =====
+// ===== CONFIG JSONP =====
 const BLOG_ID = "4521274187180591519";
 const JSONP_URL = `https://www.blogger.com/feeds/${BLOG_ID}/posts/default?alt=json-in-script`;
 
@@ -112,28 +113,20 @@ function gdataIoCallback(data){
     const title = post.title.$t;
     const content = post.content.$t;
     const doc = new DOMParser().parseFromString(content,"text/html");
-    const iframe = doc.querySelector("iframe");
-    if(!iframe) return;
 
-    // Ambil thumbnail dari ID video (XVideos / StreamTape)
-    let thumb = "https://via.placeholder.com/300x169?text=Video";
-    try{
-      if(iframe.src.includes("xvideos.com/embedframe")){
-        const vidId = iframe.src.split("/")[4];
-        thumb = `https://img-cdn.xvideos.com/videos/thumbs/${vidId}.jpg`;
-      }
-      else if(iframe.src.includes("streamtape.com/e")){
-        const parts = iframe.src.split("/");
-        const vidId = parts[parts.length-1];
-        thumb = `https://images.streamtape.com/thumbs/${vidId}.jpg`;
-      }
-    }catch(e){ thumb = "https://via.placeholder.com/300x169?text=Video"; }
+    // Ambil thumbnail & iframe
+    const iframeEl = doc.querySelector(".video_url iframe");
+    const thumbEl = doc.querySelector(".thumbnail");
+    if(!iframeEl) return;
+
+    const iframeSrc = iframeEl.src;
+    const thumbSrc = thumbEl ? thumbEl.textContent.trim() : "https://via.placeholder.com/300x169?text=Video";
 
     const card = document.createElement("div");
     card.className = "video-card";
-    card.innerHTML = `<div class="video-thumb"><img src="${thumb}" alt="${title}"></div>
+    card.innerHTML = `<div class="video-thumb"><img src="${thumbSrc}" alt="${title}"></div>
                       <div class="video-info"><h3>${title}</h3></div>`;
-    card.onclick = ()=>openModal(iframe.src);
+    card.onclick = ()=>openModal(iframeSrc);
     container.appendChild(card);
   });
 }
@@ -169,5 +162,6 @@ const script = document.createElement("script");
 script.src = JSONP_URL + "&callback=gdataIoCallback";
 document.body.appendChild(script);
 </script>
+
 </body>
 </html>
