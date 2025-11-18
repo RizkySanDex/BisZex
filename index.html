@@ -18,11 +18,34 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
 .search-bar button{background:#ff5314;color:white;padding:0 14px;border-radius:0 6px 6px 0;border:none;cursor:pointer}
 .nav-links a{margin-left:12px;color:#aaa;text-decoration:none;font-size:0.9rem;cursor:pointer}
 
-.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:15px;padding:10px}
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* poster lebih lebar */
+  gap: 20px; /* jarak antar poster */
+  padding: 15px;
+}
 
-.video-card{background:#1a1a1a;border-radius:10px;overflow:hidden;cursor:pointer;transition:.3s}
-.video-card:hover{transform:scale(1.03)}
-.video-card img{width: 100%;aspect-ratio: 16 / 9; /* biar landscape persegi panjang */object-fit: cover;border-radius: 10px 10px 0 0;}
+.video-card img {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* landscape */
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width:768px){
+  .video-grid{
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+  }
+}
+@media (max-width:480px){
+  .video-grid{
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
+}
+
 .video-card h3{padding:10px;font-size:15px;color:#fff;line-height:1.3em;text-align:left;height:40px;overflow:hidden}
 
 /* MODAL */
