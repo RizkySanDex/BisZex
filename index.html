@@ -123,7 +123,16 @@ header{display:flex;justify-content:space-between;align-items:center;flex-wrap:w
             </div>
             <div class="modal-right">
                 <!-- Adsterra 300x250 -->
-                <script type="text/javascript" src="https://www.adriver.ru/cgi-bin/erle.cgi?sid=XXXX&type=script&ad=BBBB"></script>
+                <script type="text/javascript">
+	atOptions = {
+		'key' : 'c4f0b959a9c4b12d8d039c71b3c3e1ec',
+		'format' : 'iframe',
+		'height' : 250,
+		'width' : 300,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/c4f0b959a9c4b12d8d039c71b3c3e1ec/invoke.js"></script>
                 <div class="image-grid" id="imageGallery"></div>
             </div>
         </div>
@@ -150,33 +159,59 @@ const API_KEY="AIzaSyA8k0Fr9m-7zsC1EzdOjI3kgMR92bJHs_E";
 const videoContainer=document.getElementById("videoContainer");
 let currentVideos=[];
 
+// Ambil frame pertama video MP4 sebagai thumbnail
+function getVideoThumbnail(url){
+    return new Promise(resolve=>{
+        if(!url) return resolve("https://via.placeholder.com/600x400?text=No+Image");
+        const video=document.createElement('video');
+        video.src=url;
+        video.crossOrigin="anonymous";
+        video.muted=true;
+        video.addEventListener('loadeddata',()=>{
+            const canvas=document.createElement('canvas');
+            canvas.width=video.videoWidth;
+            canvas.height=video.videoHeight;
+            canvas.getContext('2d').drawImage(video,0,0,canvas.width,canvas.height);
+            resolve(canvas.toDataURL('image/jpeg'));
+        });
+        video.addEventListener('error',()=>resolve("https://via.placeholder.com/600x400?text=No+Image"));
+    });
+}
+
 function parseHTML(post){return new DOMParser().parseFromString(post.content||"","text/html")}
+function extractVideoUrl(p){const doc=parseHTML(p);return doc.querySelector("iframe")?.src||doc.querySelector("video")?.src||"";}
+function extractGallery(p){const doc=parseHTML(p);const raw=doc.querySelector(".gallery")?.textContent?.trim();if(!raw)return[];return raw.split(",").map(x=>x.trim()).filter(x=>x.length>5);}
+function extractTitle(p){return p.title||"No Title";}
 function extractThumbnail(p){
     const doc=parseHTML(p);
     const iframe=doc.querySelector("iframe");
     if(iframe){
         const src=iframe.src;
-        // YouTube thumbnail extraction
         const ytMatch=src.match(/(?:youtube\.com\/embed\/|youtu\.be\/)([\w-]{11})/);
         if(ytMatch) return `https://img.youtube.com/vi/${ytMatch[1]}/hqdefault.jpg`;
     }
-    return doc.querySelector("img")?.src||"https://via.placeholder.com/600x400?text=No+Image";
+    const videoTag=doc.querySelector("video");
+    if(videoTag) return getVideoThumbnail(videoTag.src);
+    return Promise.resolve(doc.querySelector("img")?.src||"https://via.placeholder.com/600x400?text=No+Image");
 }
-function extractVideoUrl(p){const doc=parseHTML(p);return doc.querySelector("iframe")?.src||"";}
-function extractGallery(p){const doc=parseHTML(p);const raw=doc.querySelector(".gallery")?.textContent?.trim();if(!raw)return[];return raw.split(",").map(x=>x.trim()).filter(x=>x.length>5);}
 
 async function loadVideos(){
     const url=`https://www.googleapis.com/blogger/v3/blogs/${BLOG_ID}/posts?key=${API_KEY}&maxResults=30`;
     const res=await fetch(url);
     const data=await res.json();
-    currentVideos=data.items.map(p=>({
-        id:p.id,
-        title:p.title,
-        thumbnail:extractThumbnail(p),
-        videoUrl:extractVideoUrl(p),
-        gallery:extractGallery(p),
-        labels:p.labels||[]
-    }));
+    currentVideos=[];
+    for(const p of data.items){
+        const vidUrl=extractVideoUrl(p);
+        const thumb=await extractThumbnail(p);
+        currentVideos.push({
+            id:p.id,
+            title:extractTitle(p),
+            videoUrl:vidUrl,
+            thumbnail:thumb,
+            gallery:extractGallery(p),
+            labels:p.labels||[]
+        });
+    }
     renderList(currentVideos);
     initFilters();
 }
