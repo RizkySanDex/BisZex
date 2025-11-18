@@ -45,10 +45,21 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
       <button id="searchBtn"><i class="fas fa-search"></i></button>
     </div>
   </header>
+
+  <!-- HEADER AD 320x50 -->
   <div class="ad-slot">
-    <!-- Slot Header 320x50 Adsterra / bisa diganti -->
-    <iframe src="about:blank" width="320" height="50" style="border:none;"></iframe>
+    <script type="text/javascript">
+      atOptions = {
+        'key' : 'f911d9fd4c8cadde096c6bfbf9d30630',
+        'format' : 'iframe',
+        'height' : 50,
+        'width' : 320,
+        'params' : {}
+      };
+    </script>
+    <script type="text/javascript" src="//www.highperformanceformat.com/f911d9fd4c8cadde096c6bfbf9d30630/invoke.js"></script>
   </div>
+
   <div id="videoContainer" class="video-grid"></div>
 </div>
 
@@ -57,16 +68,34 @@ header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-betw
   <div class="modal-box">
     <button class="modal-close" id="closeModal">&times;</button>
     <div class="modal-video-wrap" id="modalVideo"></div>
+    <!-- MODAL AD 300x250 -->
     <div class="ad-slot">
-      <!-- Slot 300x250 Banner -->
-      <iframe src="about:blank" width="300" height="250" style="border:none;"></iframe>
+      <script type="text/javascript">
+        atOptions = {
+          'key' : 'c4f0b959a9c4b12d8d039c71b3c3e1ec',
+          'format' : 'iframe',
+          'height' : 250,
+          'width' : 300,
+          'params' : {}
+        };
+      </script>
+      <script type="text/javascript" src="//www.highperformanceformat.com/c4f0b959a9c4b12d8d039c71b3c3e1ec/invoke.js"></script>
     </div>
   </div>
 </div>
 
+<!-- FOOTER AD 320x50 -->
 <div class="ad-slot" style="text-align:center;margin:20px 0">
-  <!-- Slot Footer 320x50 Adsterra -->
-  <iframe src="about:blank" width="320" height="50" style="border:none;"></iframe>
+  <script type="text/javascript">
+    atOptions = {
+      'key' : 'f911d9fd4c8cadde096c6bfbf9d30630',
+      'format' : 'iframe',
+      'height' : 50,
+      'width' : 320,
+      'params' : {}
+    };
+  </script>
+  <script type="text/javascript" src="//www.highperformanceformat.com/f911d9fd4c8cadde096c6bfbf9d30630/invoke.js"></script>
 </div>
 
 <script>
@@ -82,15 +111,24 @@ function gdataIoCallback(data){
   entries.forEach(post=>{
     const title = post.title.$t;
     const content = post.content.$t;
-    // Ambil iframe pertama
     const doc = new DOMParser().parseFromString(content,"text/html");
     const iframe = doc.querySelector("iframe");
     if(!iframe) return;
-    // Ambil thumbnail dari src video (frame pertama)
+
+    // Ambil thumbnail dari ID video (XVideos / StreamTape)
     let thumb = "https://via.placeholder.com/300x169?text=Video";
-    if(iframe.src.includes(".mp4")){
-      thumb = iframe.src; // untuk mp4 bisa ambil src
-    }
+    try{
+      if(iframe.src.includes("xvideos.com/embedframe")){
+        const vidId = iframe.src.split("/")[4];
+        thumb = `https://img-cdn.xvideos.com/videos/thumbs/${vidId}.jpg`;
+      }
+      else if(iframe.src.includes("streamtape.com/e")){
+        const parts = iframe.src.split("/");
+        const vidId = parts[parts.length-1];
+        thumb = `https://images.streamtape.com/thumbs/${vidId}.jpg`;
+      }
+    }catch(e){ thumb = "https://via.placeholder.com/300x169?text=Video"; }
+
     const card = document.createElement("div");
     card.className = "video-card";
     card.innerHTML = `<div class="video-thumb"><img src="${thumb}" alt="${title}"></div>
