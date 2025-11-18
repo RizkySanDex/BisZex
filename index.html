@@ -3,181 +3,273 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aisah Video</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<title>Video Site</title>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:"Segoe UI",Arial,sans-serif;background:#111;color:#fff}
-.container{width:95%;max-width:1200px;margin:20px auto}
-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px}
-.logo{display:flex;align-items:center;gap:8px}
-.logo i{font-size:1.6rem;color:#ff5314}
-.logo h1{font-size:1.2rem;font-weight:700}
-.search-bar{flex:1;display:flex;max-width:500px;min-width:180px}
-.search-bar input{flex:1;padding:10px 12px;border:1px solid #333;border-radius:6px 0 0 6px;background:#222;color:#fff}
-.search-bar button{background:#ff5314;color:white;padding:0 14px;border-radius:0 6px 6px 0;border:none;cursor:pointer}
-.nav-links a{margin-left:12px;color:#aaa;text-decoration:none;font-size:0.9rem;cursor:pointer}
-
-.video-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* poster lebih lebar */
-  gap: 20px; /* jarak antar poster */
-  padding: 15px;
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#111;
+  color:white;
 }
 
-.video-card img {
-  width: 100%;
-  aspect-ratio: 16 / 9; /* landscape */
-  object-fit: cover;
-  border-radius: 10px 10px 0 0;
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 15px;
+  background:#000;
+  border-bottom:1px solid #222;
 }
 
-/* MOBILE RESPONSIVE */
-@media (max-width:768px){
-  .video-grid{
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 15px;
-  }
-}
-@media (max-width:480px){
-  .video-grid{
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 10px;
-  }
+.site-name{
+  font-size:22px;
+  font-weight:bold;
 }
 
-.video-card h3{padding:10px;font-size:15px;color:#fff;line-height:1.3em;text-align:left;height:40px;overflow:hidden}
+.header-ad{
+  width:320px;
+  height:50px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.search-box input{
+  padding:7px 12px;
+  width:150px;
+  border-radius:6px;
+  border:none;
+}
+
+/* GRID VIDEO */
+.video-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+  gap:20px;
+  padding:15px;
+}
+
+.video-card{
+  background:#1a1a1a;
+  border-radius:10px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.video-card:hover{
+  transform:scale(1.03);
+}
+
+.video-card img{
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+}
+
+.video-title{
+  padding:10px;
+  font-size:16px;
+  height:55px;
+  overflow:hidden;
+}
 
 /* MODAL */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,0.9);display:none;align-items:center;justify-content:center;z-index:9999;padding:10px}
-.modal.open{display:flex}
-.modal-box{width:95%;max-width:1000px;background:#111;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;position:relative}
-.modal-close{position:absolute;top:10px;right:10px;width:35px;height:35px;border-radius:50%;background:rgba(255,83,20,.8);color:white;font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;z-index:10}
-.modal-video-wrap{position:relative;width:100%;aspect-ratio:16/9;background:black}
-.modal-video-wrap iframe{width:100%;height:100%;object-fit:contain;border:0}
-
-/* AD SLOT */
-.ad-slot{margin:8px 0;text-align:center}
-
-/* MOBILE RESPONSIVE */
-@media(max-width:768px){
-  .video-card img{height:160px}
-  .video-card h3{font-size:14px;height:36px}
-  .video-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:10px;
+  z-index:999999;
 }
-@media(max-width:480px){
-  .video-card img{height:140px}
-  .video-card h3{font-size:13px;height:32px}
-  .video-grid{grid-template-columns:repeat(2,1fr)}
+
+.modal.open{
+  display:flex;
+}
+
+.modal-box{
+  width:95%;
+  max-width:1100px;
+  background:#111;
+  border-radius:12px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:row;
+  gap:15px;
+  padding:15px;
+  position:relative;
+}
+
+.modal-video-wrap{
+  flex:3;
+  background:black;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.modal-video-wrap iframe{
+  width:100%;
+  height:100%;
+  border:0;
+}
+
+.modal-ad{
+  flex:1;
+  min-width:300px;
+  height:250px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* CLOSE BUTTON */
+.modal-close{
+  position:absolute;
+  top:8px;
+  right:12px;
+  font-size:28px;
+  color:white;
+  background:none;
+  border:none;
+  cursor:pointer;
+  z-index:10;
+}
+
+/* RESPONSIVE MOBILE */
+@media(max-width:768px){
+  .modal-box{
+    flex-direction:column;
+    width:100%;
+    height:100%;
+    max-width:100%;
+    padding:10px;
+  }
+
+  .modal-video-wrap{
+    height:55vh;
+  }
+
+  .modal-ad{
+    width:100%;
+    min-width:100%;
+    height:auto;
+    margin-top:10px;
+  }
+
+  .modal-ad iframe{
+    width:100% !important;
+    height:90px !important;
+  }
 }
 </style>
 </head>
+
 <body>
 
-<div class="container">
-  <header>
-    <div class="logo"><i class="fas fa-play-circle"></i><h1>Aisah Video</h1></div>
-    <div class="search-bar">
-      <input id="searchInput" type="text" placeholder="Cari video...">
-      <button id="searchBtn"><i class="fas fa-search"></i></button>
-    </div>
-  </header>
+<header>
+  <div class="site-name">Video Site</div>
 
-  <!-- HEADER AD 320x50 -->
-  <div class="ad-slot">
-    <script type="text/javascript">
-      atOptions = {'key':'f911d9fd4c8cadde096c6bfbf9d30630','format':'iframe','height':50,'width':320,'params':{}};
-    </script>
-    <script type="text/javascript" src="//www.highperformanceformat.com/f911d9fd4c8cadde096c6bfbf9d30630/invoke.js"></script>
+  <div class="header-ad">
+<script type="text/javascript">
+	atOptions = {
+		'key' : 'f911d9fd4c8cadde096c6bfbf9d30630',
+		'format' : 'iframe',
+		'height' : 50,
+		'width' : 320,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/f911d9fd4c8cadde096c6bfbf9d30630/invoke.js"></script>
   </div>
 
-  <div id="videoContainer" class="video-grid"></div>
-</div>
+  <div class="search-box">
+    <input type="text" placeholder="Cari Video">
+  </div>
+</header>
 
-<!-- MODAL VIDEO -->
+<div class="video-grid" id="videoGrid"></div>
+
+<!-- MODAL -->
 <div id="videoModal" class="modal">
   <div class="modal-box">
+
     <button class="modal-close" id="closeModal">&times;</button>
+
     <div class="modal-video-wrap" id="modalVideo"></div>
 
-    <!-- MODAL AD 300x250 -->
-    <div class="ad-slot">
+    <div class="modal-ad" id="modalAd">
       <script type="text/javascript">
-        atOptions = {'key':'c4f0b959a9c4b12d8d039c71b3c3e1ec','format':'iframe','height':250,'width':300,'params':{}};
+        atOptions = {
+          'key' : 'c4f0b959a9c4b12d8d039c71b3c3e1ec',
+          'format' : 'iframe',
+          'height' : 250,
+          'width' : 300,
+          'params' : {}
+        };
       </script>
       <script type="text/javascript" src="//www.highperformanceformat.com/c4f0b959a9c4b12d8d039c71b3c3e1ec/invoke.js"></script>
     </div>
+
   </div>
 </div>
 
-<!-- FOOTER AD 320x50 -->
-<div class="ad-slot" style="text-align:center;margin:20px 0">
-  <script type="text/javascript">
-    atOptions = {'key':'f911d9fd4c8cadde096c6bfbf9d30630','format':'iframe','height':50,'width':320,'params':{}};
-  </script>
-  <script type="text/javascript" src="//www.highperformanceformat.com/f911d9fd4c8cadde096c6bfbf9d30630/invoke.js"></script>
-</div>
-
 <script>
-// ===== CONFIG JSONP =====
-const BLOG_ID = "4521274187180591519";
-const JSONP_URL = `https://www.blogger.com/feeds/${BLOG_ID}/posts/default?alt=json-in-script`;
-
-// ===== CALLBACK JSONP =====
-function gdataIoCallback(data){
-  const entries = data.feed.entry || [];
-  const container = document.getElementById("videoContainer");
-  container.innerHTML = "";
-  entries.forEach(post=>{
-    const title = post.title.$t;
-    const content = post.content.$t;
-    const doc = new DOMParser().parseFromString(content,"text/html");
-
-    const iframeEl = doc.querySelector(".video_url iframe");
-    const thumbEl = doc.querySelector(".thumbnail");
-    if(!iframeEl) return;
-
-    const iframeSrc = iframeEl.src;
-    const thumbSrc = thumbEl ? thumbEl.textContent.trim() : "https://via.placeholder.com/300x169?text=Video";
-
-    const card = document.createElement("div");
-    card.className = "video-card";
-    card.innerHTML = `<img src="${thumbSrc}" alt="${title}"><h3>${title}</h3>`;
-    card.onclick = ()=>openModal(iframeSrc);
-    container.appendChild(card);
-  });
-}
-
-// ===== MODAL =====
-const modal = document.getElementById("videoModal");
-const modalVideo = document.getElementById("modalVideo");
 function openModal(src){
   modalVideo.innerHTML = `<iframe src="${src}?autoplay=1" allowfullscreen></iframe>`;
-  modal.classList.add("open");
+  document.getElementById("videoModal").classList.add("open");
 }
+
 document.getElementById("closeModal").onclick = ()=>{
-  modal.classList.remove("open");
+  document.getElementById("videoModal").classList.remove("open");
   modalVideo.innerHTML="";
 };
 
-// ===== SEARCH =====
-document.getElementById("searchBtn").onclick = searchVideos;
-document.getElementById("searchInput").addEventListener("keypress", function(e){
-  if(e.key==="Enter") searchVideos();
-});
-function searchVideos(){
-  const term = document.getElementById("searchInput").value.toLowerCase();
-  const cards = document.querySelectorAll("#videoContainer .video-card");
-  cards.forEach(card=>{
-    const title = card.querySelector("h3").textContent.toLowerCase();
-    card.style.display = title.includes(term) ? "block" : "none";
+/* LOAD BLOGGER POSTING via JSONP */
+function loadBlogger(){
+  const blogID = "4521274187180591519";
+
+  let url = `https://www.blogger.com/feeds/${blogID}/posts/default?alt=json-in-script&callback=renderPosts&max-results=50`;
+
+  let script = document.createElement("script");
+  script.src = url;
+  document.body.appendChild(script);
+}
+
+function renderPosts(data){
+  let entries = data.feed.entry;
+  let grid = document.getElementById("videoGrid");
+
+  entries.forEach(post=>{
+    let title = post.title.$t;
+
+    let content = post.content.$t;
+
+    let thumbMatch = content.match(/<div class="thumbnail">(.*?)<\/div>/s);
+    let thumb = thumbMatch ? thumbMatch[1].trim() : "";
+
+    let videoMatch = content.match(/<div class="video_url">([\s\S]*?)<\/div>/);
+    let iframeRaw = videoMatch ? videoMatch[1] : "";
+
+    grid.innerHTML += `
+      <div class="video-card" onclick="openModal(\`${extractSrc(iframeRaw)}\`)">
+        <img src="${thumb}" alt="">
+        <div class="video-title">${title}</div>
+      </div>
+    `;
   });
 }
 
-// ===== LOAD JSONP =====
-const script = document.createElement("script");
-script.src = JSONP_URL + "&callback=gdataIoCallback";
-document.body.appendChild(script);
+function extractSrc(html){
+  let match = html.match(/src="([^"]+)"/);
+  return match ? match[1] : "";
+}
+
+loadBlogger();
 </script>
 
 </body>
