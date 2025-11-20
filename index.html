@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎬 BisZEX Film</title>
+    <title>🎬 CineView | Tinjauan Film</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
@@ -20,12 +20,12 @@
 
         /* HEADER dan NAVIGASI */
         header { background-color: var(--background-dark); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--secondary-dark); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 2rem; font-weight: 700; color: var(--primary-color); }
+        .logo { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); }
         nav ul { list-style: none; display: flex; }
         nav ul li a { color: var(--text-light); text-decoration: none; margin-left: 20px; font-weight: 400; transition: color 0.3s ease; padding: 5px 0; }
         
-        /* Gaya Link Navigasi Aktif */
-        .nav-link.active, nav ul li a:hover { 
+        /* Gaya Link Navigasi Aktif (Hanya untuk class="nav-link") */
+        .nav-link.active, nav ul li a.nav-link:hover { 
             color: var(--primary-color); 
             border-bottom: 2px solid var(--primary-color);
         }
@@ -49,7 +49,7 @@
         
         /* Modifikasi: Judul Font Kecil dan Tidak Bold */
         .film-card h3 { 
-            font-size: 1rem;
+            font-size: 1.3rem;
             font-weight: 400; 
             margin-bottom: 5px; 
             color: var(--primary-color); 
@@ -57,37 +57,20 @@
 
         .film-card .genre { color: #aaa; font-size: 0.9rem; margin-bottom: 0; }
         .loading-message { grid-column: 1 / -1; text-align: center; font-style: italic; color: #888; }
-        .cta-banner { display: none; } 
         footer { background-color: var(--secondary-dark); text-align: center; padding: 20px 5%; font-size: 0.9rem; }
         .social-links a { color: var(--text-light); text-decoration: none; margin: 0 5px; transition: color 0.3s ease; }
         .social-links a:hover { color: var(--primary-color); }
 
-        /* CSS MODAL VIDEO */
+        /* CSS MODAL VIDEO & IKLAN (Sama seperti sebelumnya) */
         .video-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.9); backdrop-filter: blur(5px); }
         .modal-content { position: relative; background-color: var(--background-dark); margin: 10% auto; padding: 20px; width: 90%; max-width: 900px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); }
         .close-btn { color: #aaa; float: right; font-size: 30px; font-weight: bold; line-height: 1; transition: color 0.3s; }
         .close-btn:hover, .close-btn:focus { color: var(--primary-color); text-decoration: none; cursor: pointer; }
         .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-top: 15px; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        
-        /* CSS KHUSUS TOMBOL IKLAN */
         .ad-cta-container { text-align: center; margin-top: 20px; }
-        .ad-button {
-            display: inline-block;
-            background-color: var(--ad-color); 
-            color: var(--background-dark);
-            padding: 12px 30px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            transition: background-color 0.3s ease, transform 0.1s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        .ad-button:hover {
-            background-color: #33c1ff; 
-            transform: translateY(-2px);
-        }
+        .ad-button { display: inline-block; background-color: var(--ad-color); color: var(--background-dark); padding: 12px 30px; text-decoration: none; border-radius: 5px; font-weight: 700; font-size: 1.1rem; transition: background-color 0.3s ease, transform 0.1s ease; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
+        .ad-button:hover { background-color: #33c1ff; transform: translateY(-2px); }
         
         /* MEDIA QUERIES */
         @media (max-width: 768px) {
@@ -101,12 +84,12 @@
 <body>
 
     <header>
-        <div class="logo">BisZEX Film</div>
+        <div class="logo">CineView</div>
         <nav>
             <ul id="main-nav-list">
                 <li><a href="#" class="nav-link active" data-label="">Terbaru</a></li>
                 <li><a href="#" class="nav-link" data-label="Populer">Populer</a></li>
-                <li><a href="#" class="nav-link" data-label="REVIEW">Review</a></li>
+                <li><a href="#" class="nav-link" data-label="Review">Review</a></li>
                 <li><a href="URL_BLOG_ANDA" target="_blank">Blog/Review</a></li>
                 <li><a href="URL_GITHUB_ANDA" target="_blank">GitHub</a></li>
             </ul>
@@ -117,12 +100,17 @@
         <section id="terbaru" class="film-grid">
             <h2></h2>
             <div class="posts-container" id="latest-posts-container">
+                <p class="loading-message">Memuat ulasan dari Blog...</p>
             </div>
         </section>
 
         <footer id="kontak">
-            <p>&copy; 2025 BisZEX Film. Dibuat dengan 💜 untuk pecinta film Hot.</p>
-            </footer>
+            <p>&copy; 2025 CineView. Dibuat dengan 💜 untuk pecinta film.</p>
+            <div class="social-links">
+                <a href="URL_GITHUB_ANDA" target="_blank">GitHub</a> |
+                <a href="mailto:emailanda@domain.com">Email Kami</a>
+            </div>
+        </footer>
     </main>
     
     <div id="videoModal" class="video-modal">
@@ -146,7 +134,7 @@
         // -------------------------------------------
         const BLOGGER_API_KEY = "AIzaSyA8k0Fr9m-7zsC1EzdOjI3kgMR92bJHs_E";
         const BLOG_ID = "4521274187180591519";
-        const MAX_POSTS = 12;
+        const MAX_POSTS = 6;
         const DEFAULT_URL_IKLAN = "https://www.effectivegatecpm.com/chj3nt5j?key=53395c0910a457d17c8975fb650cccb7"; // URL Iklan Anda
         // -------------------------------------------
 
@@ -155,29 +143,24 @@
         const closeBtn = document.querySelector('.close-btn');
         const modalPlayer = document.getElementById('modalVideoPlayer');
         const modalTitle = document.getElementById('modalTitle');
-        const navLinks = document.querySelectorAll('.nav-link');
+        const navLinks = document.querySelectorAll('.nav-link'); // HANYA AMBIL LINK FILTER
         const adButtonLink = document.getElementById('adButtonLink');
         
-        // Atur link iklan statis
         adButtonLink.href = DEFAULT_URL_IKLAN;
 
         function extractVideoInfo(content) {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = content;
-            
             const iframe = tempDiv.querySelector('iframe');
             const videoSrc = iframe ? iframe.src : null;
-            
             const img = tempDiv.querySelector('img');
             const thumbSrc = img ? img.src : 'https://via.placeholder.com/600x350.png?text=Poster+Tidak+Tersedia';
-            
             return { videoSrc, thumbSrc };
         }
 
         function openModal(title, videoSrc) {
             const cleanSrc = videoSrc.replace(/[?&]autoplay=.*?(&|$)/i, '').replace(/[?&]enablejsapi=.*?(&|$)/i, '');
             const finalSrc = cleanSrc.includes('?') ? cleanSrc + '&autoplay=1&enablejsapi=1' : cleanSrc + '?autoplay=1&enablejsapi=1';
-            
             modalTitle.textContent = title;
             modalPlayer.src = finalSrc;
             modal.style.display = 'block';
@@ -190,16 +173,14 @@
             document.body.style.overflow = 'auto'; 
         }
 
-        /**
-         * Fungsi utama untuk mengambil postingan berdasarkan label
-         * @param {string} label - Label untuk filter (kosong untuk terbaru).
-         */
         async function fetchPostsByLabel(label = '') {
-            // Konstruksi URL API: tambahkan &labels= hanya jika label tidak kosong
             const labelQuery = label ? `&labels=${label}` : '';
             const fetchUrl = `https://www.googleapis.com/blogger/v3/blogs/${BLOG_ID}/posts?key=${BLOGGER_API_KEY}&fetchBodies=true&maxResults=${MAX_POSTS}${labelQuery}`;
             
-            container.innerHTML = '<p class="loading-message"></p>';
+            // Debugging: Kita biarkan console.log ini sebentar
+            // console.log("URL API yang dipanggil:", fetchUrl); 
+            
+            container.innerHTML = '<p class="loading-message">Memuat ulasan dari Blog...</p>';
 
             try {
                 const response = await fetch(fetchUrl);
@@ -217,10 +198,7 @@
                 
                 data.items.forEach(post => {
                     const postTitle = post.title;
-                    
-                    // Ambil label, jika tidak ada, hasilnya string kosong (menghilangkan 'Umum')
                     const labels = post.labels ? post.labels.join(', ') : '';
-                    
                     const { videoSrc, thumbSrc } = extractVideoInfo(post.content);
 
                     if (videoSrc) {
@@ -253,17 +231,18 @@
         
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
-                // Hanya jalankan logika filtrasi untuk link yang memiliki data-label
-                if (this.dataset.label !== undefined && this.href === '#') {
+                
+                // Cek apakah link memiliki class="nav-link" (yaitu link filter)
+                if (this.classList.contains('nav-link')) { 
                     e.preventDefault(); 
                     
                     const selectedLabel = this.dataset.label; 
 
-                    // Hapus kelas 'active' dari semua link dan tambahkan ke link yang diklik
+                    // 1. Kelola Active State
                     navLinks.forEach(l => l.classList.remove('active'));
                     this.classList.add('active'); 
 
-                    // Panggil fungsi filter
+                    // 2. Panggil fungsi filter
                     fetchPostsByLabel(selectedLabel);
                 }
             });
@@ -273,7 +252,6 @@
         // PANGGILAN AWAL
         // -------------------------------------------
 
-        // Panggil fungsi dengan label dari menu aktif (default Terbaru) saat halaman dimuat
         document.addEventListener('DOMContentLoaded', () => {
             const initialLink = document.querySelector('.nav-link.active');
             const initialLabel = initialLink ? initialLink.dataset.label : '';
