@@ -1,205 +1,367 @@
-<!DOCTYPE html>
+<!--
+  FlixPro — Full HTML Template (Blogger + GitHub + Netlify compatible)
+  - Save as `index.html` for Netlify/GitHub hosting OR paste into a Blogger HTML/Theme widget.
+  - This template can fetch posts from Blogger using the Blogger v3 API (client-side).
+  - IMPORTANT: Do NOT embed your API key in public repos. Use Netlify Functions / server-side proxy for production.
 
+  USAGE
+  1) Replace API_KEY below with your Blogger API Key only for local testing. For production, set up a serverless function (Netlify) and point API_PROXY.
+  2) Set BLOG_ID to your Blogger numeric ID (already set below).
+  3) In Blogger, create posts with a consistent format: include a YouTube iframe or an <img> poster and use Labels as genres (e.g. "livestream", "short").
+
+  Notes:
+  - This file contains a fallback mode (load sample movies from local JSON) when API is not configured.
+  - Template supports: search, filter by label, hero trailer, modal player, Next/Prev (keyboard), watchlist (localStorage), dark toggle.
+-->
+
+<!doctype html>
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Show Video</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-    --primary:#ff5314;
-    --secondary:#2a2a2a;
-    --light:#f7f7f7;
-    --text:#222;
-    --card:#fff;
-    --muted:#777;
-}
-body{
-    font-family:"Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background:var(--light);
-    color:var(--text);
-    line-height:1.5;
-    min-height:100vh;
-}
-.container{width:94%;max-width:1150px;margin:18px auto}
-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0}
-.logo{display:flex;align-items:center;gap:10px}
-.logo i{font-size:1.6rem;color:var(--primary)}
-.logo h1{font-size:1.1rem;font-weight:700}
-.search-bar{flex:1;display:flex;max-width:520px;margin-left:10px}
-.search-bar input{flex:1;padding:9px 12px;border-radius:6px 0 0 6px;border:1px solid #e3e3e3;font-size:0.95rem}
-.search-bar button{padding:0 12px;border:none;background:var(--secondary);color:#fff;border-radius:0 6px 6px 0;cursor:pointer}
-.nav-links{display:flex;gap:10px}
-.nav-links a{font-size:0.9rem;color:var(--muted);text-decoration:none;padding:6px 8px;border-radius:6px}
-.nav-links a:hover{background:#fff;border:1px solid #eee}
-.filters{display:flex;gap:8px;margin:14px 0;flex-wrap:wrap}
-.filter-btn{background:var(--card);border:1px solid #eee;padding:8px 14px;border-radius:20px;cursor:pointer;font-weight:600;color:var(--muted)}
-.filter-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-bottom:40px}
-.video-card{background:var(--card);border-radius:10px;overflow:hidden;box-shadow:0 6px 18px rgba(8,8,8,0.04);transition:transform .18s}
-.video-card:hover{transform:translateY(-6px)}
-.video-thumb{position:relative;height:0;padding-bottom:56.25%;overflow:hidden;background:#111;cursor:pointer}
-.video-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.video-info{padding:12px}
-.video-info h3{font-size:0.98rem;margin-bottom:8px;height:42px;overflow:hidden}
-.empty{padding:40px;text-align:center;color:var(--muted)}
-.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:1200;padding:20px}
-.modal.open{display:flex}
-.modal-box{width:100%;max-width:980px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.35);display:flex;flex-direction:column}
-.modal-close{position:absolute;right:28px;top:28px;width:40px;height:40px;border-radius:999px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.45);color:white;border:none;cursor:pointer;font-size:18px}
-.modal-video-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000}
-.modal-video-wrap iframe,.modal-video-wrap video{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:contain}
-.modal-details{padding:14px 16px;display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;border-top:1px solid #f1f1f1}
-.modal-details .desc{flex:1;min-width:220px}
-.modal-details h3{font-size:1rem;margin-bottom:6px}
-.modal-details p{color:var(--muted);font-size:0.92rem;margin-bottom:10px}
-.product-link{background:var(--primary);color:#fff;padding:9px 14px;border-radius:8px;text-decoration:none;font-weight:700}
-.image-gallery{display:flex;gap:8px;overflow:auto;padding:6px 0}
-.image-gallery img{height:55px;border-radius:6px;cursor:pointer;object-fit:cover}
-.img-viewer{position:fixed;inset:0;background:rgba(0,0,0,0.85);display:none;align-items:center;justify-content:center;z-index:2000}
-.img-viewer.open{display:flex}
-.img-viewer img{max-width:88%;max-height:88%;border-radius:10px;object-fit:contain}
-.img-viewer-btn{position:absolute;top:50%;transform:translateY(-50%);font-size:32px;color:#fff;background:rgba(0,0,0,0.5);border:none;width:50px;height:50px;border-radius:999px;cursor:pointer}
-.img-prev{left:20px}
-.img-next{right:20px}
-.img-viewer-close{position:absolute;top:20px;right:20px;font-size:32px;background:rgba(0,0,0,0.5);color:#fff;border:none;width:48px;height:48px;border-radius:999px;cursor:pointer}
-@media(max-width:720px){.modal-box{max-width:94%}.modal-close{right:16px;top:16px}}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FlixPro — Film & Trailer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#98a0b3;--accent:#ff5a5f;--glass:rgba(255,255,255,0.04);--radius:14px;--max-width:1200px;--transition:300ms cubic-bezier(.2,.9,.3,1)}
+    *{box-sizing:border-box}html,body{height:100%}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;line-height:1.4;background:linear-gradient(180deg,#071023 0%,var(--bg) 100%);color:#eaf1ff;min-height:100%;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:28px 20px;display:flex;justify-content:center}
+    .container{width:100%;max-width:var(--max-width)}header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;gap:16px}.brand{display:flex;align-items:center;gap:14px}.logo{width:56px;height:56px;background:linear-gradient(135deg,var(--accent),#ff8a5c);border-radius:12px;display:grid;place-items:center;font-weight:800;font-family:'Playfair Display',serif;color:white}.brand h1{margin:0;font-size:20px}.brand p{margin:0;font-size:12px;color:var(--muted)}.controls{display:flex;gap:12px;align-items:center}.search{background:var(--card);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;min-width:260px}.search input{background:transparent;border:0;color:inherit;outline:none;font-size:14px;width:100%}.btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px 14px;border-radius:10px;cursor:pointer;transition:all var(--transition)}.btn:hover{transform:translateY(-3px)}.filters{display:flex;gap:8px;flex-wrap:wrap}.chip{padding:8px 12px;border-radius:999px;background:var(--glass);color:var(--muted);font-size:13px;cursor:pointer;border:1px solid rgba(255,255,255,0.02)}.chip.active{background:linear-gradient(90deg,rgba(255,90,95,0.12),rgba(255,138,92,0.08));color:var(--accent);border-color:rgba(255,90,95,0.2)}main{margin-top:18px}.hero{display:grid;grid-template-columns:1fr 320px;gap:20px;margin-bottom:22px}.hero-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:20px;border-radius:18px;position:relative;overflow:hidden}.hero .poster{height:260px;border-radius:12px;overflow:hidden;background:#081226}.poster img{width:100%;height:100%;object-fit:cover;display:block}.meta{display:flex;justify-content:space-between;align-items:center;margin-top:12px}.meta .title{font-family:'Playfair Display',serif;font-size:20px}.meta .rating{background:rgba(0,0,0,0.35);padding:6px 10px;border-radius:10px}.sidebar{background:var(--card);border-radius:14px;padding:18px;height:100%;display:flex;flex-direction:column;gap:12px}.sidebar h3{margin:0 0 6px 0}.mini-list{display:grid;gap:10px}.mini-item{display:flex;gap:10px;align-items:center}.mini-item img{width:64px;height:40px;object-fit:cover;border-radius:8px}.mini-item .t{font-size:13px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:12px;overflow:hidden;cursor:pointer;transition:transform var(--transition),box-shadow var(--transition)}.card:hover{transform:translateY(-10px);box-shadow:0 18px 40px rgba(12,20,30,0.6)}.thumb{height:170px;background:#061122}.thumb img{width:100%;height:100%;object-fit:cover;display:block}.card .info{padding:12px}.title-small{font-weight:600;margin:0 0 6px 0}.meta-row{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}.actions{display:flex;gap:8px;margin-top:12px}.pill{padding:8px 10px;border-radius:10px;font-size:13px;border:1px solid rgba(255,255,255,0.03)}footer{margin-top:28px;color:var(--muted);font-size:13px;text-align:center}.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(0deg,rgba(2,6,23,0.7),rgba(2,6,23,0.7));z-index:9999;padding:28px}.modal.open{display:flex}.modal-card{width:min(1000px,95%);background:#071226;border-radius:14px;overflow:hidden}.modal-top{display:flex;gap:18px;padding:18px}.modal-video{flex:1;min-height:420px;background:black}.modal-info{width:320px;padding:18px;color:var(--muted)}.close{position:absolute;right:24px;top:22px;background:transparent;border:0;color:#fff;font-size:18px}@media (max-width:1000px){.grid{grid-template-columns:repeat(3,1fr)}.hero{grid-template-columns:1fr 260px}}@media (max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}.sidebar{order:3;height:auto}}@media (max-width:480px){body{padding:14px}.grid{grid-template-columns:1fr}.search{min-width:140px}.logo{width:44px;height:44px}}.muted{color:var(--muted)}.hidden{display:none}@keyframes pop{0%{transform:scale(.98)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+  </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">FP</div>
+        <div>
+          <h1>FlixPro</h1>
+          <p class="muted">Discover films • trailers • reviews</p>
+        </div>
+      </div>
 
-<div class="container">
-<header>
-<div style="display:flex;align-items:center;gap:8px;">
-<div class="logo"><i class="fas fa-play-circle"></i><h1>Show Video</h1></div>
-<div class="search-bar">
-<input id="searchInput" type="text" placeholder="Cari video...">
-<button><i class="fas fa-search"></i></button>
-</div>
-</div>
-<nav class="nav-links">
-<a href="#">Beranda</a>
-<a href="#">Kategori</a>
-</nav>
-</header>
+      <div class="controls">
+        <div class="search" role="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M21 21l-4.35-4.35" stroke="#cbd6ea" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <input id="q" placeholder="Cari film, aktor, genre..." aria-label="Cari film" />
+        </div>
+        <div class="filters" id="filters">
+          <button class="chip active" data-genre="All">Semua</button>
+        </div>
+        <button id="darkToggle" class="btn" aria-label="Toggle dark mode">🌙</button>
+      </div>
+    </header>
 
-<div class="filters">
-<button class="filter-btn active">Populer</button>
-<button class="filter-btn">XXXXXXXXXXXXXX</button>
-<button class="filter-btn">RRRRRRRRRRRRRR</button>
-<button class="filter-btn">BBBBBBBBBBBBBB</button>
-<button class="filter-btn">NNNNNNNNNNNNNN</button>
-<button class="filter-btn">MMMMMMMMMMMMMM</button>
-</div>
+    <main>
+      <section class="hero">
+        <div class="hero-card">
+          <div class="poster" id="heroPoster">
+            <img src="https://images.unsplash.com/photo-1505685296765-3a2736de412f?q=80&w=1600&auto=format&fit=crop" alt="Poster">
+          </div>
+          <div class="meta">
+            <div>
+              <div class="title" id="heroTitle">A New Dawn</div>
+              <div class="muted" id="heroMeta">Action • 2024 • 2h 11m</div>
+            </div>
+            <div class="rating" id="heroRating">⭐ 8.5</div>
+          </div>
+          <p class="muted" style="margin-top:12px" id="heroDesc">Sebuah kisah epik tentang keberanian, pengorbanan, dan harapan. Trailer resmi tersedia untuk ditonton.</p>
+          <div class="actions">
+            <button class="pill" id="playHero">Tonton Trailer</button>
+            <button class="pill" id="addHero">Tambahkan ke Watchlist</button>
+          </div>
+        </div>
 
-<div id="videoContainer" class="video-grid"></div>
-<div id="emptyState" class="empty" style="display:none">Tidak ada produk ditemukan</div>
-</div>
+        <aside class="sidebar">
+          <h3>Trending saat ini</h3>
+          <div class="mini-list" id="trendingList"></div>
 
-<!-- MODAL VIDEO -->
+          <h3 style="margin-top:8px">Filter by Year</h3>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="chip" data-year="2024">2024</button>
+            <button class="chip" data-year="2023">2023</button>
+            <button class="chip" data-year="2022">2022</button>
+          </div>
+        </aside>
+      </section>
 
-<div id="videoModal" class="modal">
-<div class="modal-box" id="modalBox">
-<div class="modal-video-wrap" id="modalVideo"></div>
-<div class="modal-details">
-<div class="desc">
-<h3 id="modalTitle"></h3>
-<p id="modalDescription"></p>
-<div class="image-gallery" id="imageGallery"></div>
-</div>
-<div>
-<a id="modalProductLink" class="product-link" target="_blank">Direct Link</a>
-</div>
-</div>
-<button class="modal-close" id="closeModal">&times;</button>
-</div>
+      <section>
+        <h2 style="margin:0 0 12px 0">Popular Movies</h2>
+        <div class="grid" id="grid"></div>
+        <div style="text-align:center;margin-top:18px">
+          <button id="loadMore" class="btn">Load more</button>
+        </div>
+      </section>
 
-<!-- IMAGE VIEWER -->
+      <footer>
+        © <span id="year"></span> FlixPro — built with ❤️ • Template siap pakai
+      </footer>
+    </main>
+  </div>
 
-<div class="img-viewer" id="imgViewer">
-<button class="img-viewer-btn img-prev" id="imgPrev">&#10094;</button>
-<img id="imgViewerImg" src="">
-<button class="img-viewer-btn img-next" id="imgNext">&#10095;</button>
-<button class="img-viewer-close" id="imgViewerClose">&times;</button>
-</div>
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <button class="close" id="closeModal">✕</button>
+      <div class="modal-top">
+        <div class="modal-video" id="modalVideo"></div>
+        <div class="modal-info" id="modalInfo">
+          <h3 id="modalTitle">Judul Film</h3>
+          <p class="muted" id="modalMeta">Genre • Tahun • Durasi</p>
+          <p style="margin-top:12px" id="modalDesc">Deskripsi singkat film akan muncul di sini.</p>
+          <div style="margin-top:16px">
+            <button class="pill" id="watchlistBtn">Tambah ke Watchlist</button>
+            <a id="imdbLink" class="muted" href="#" target="_blank" style="display:inline-block;margin-left:12px">Lihat di IMDB →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<script>
-const BLOG_ID='4521274187180591519';
-const API_KEY='AIzaSyA8k0Fr9m-7zsC1EzdOjI3kgMR92bJHs_E';
-let currentVideos=[];
+  <script>
+    /* CONFIG - ganti API_KEY di environment / serverless untuk produksi */
+    const BLOG_ID = "4521274187180591519"; // dari kamu
+    const API_KEY = "AIzaSyA8k0Fr9m-7zsC1EzdOjI3kgMR92bJHs_E"; // TIDAK masukkan API key ke repo publik. Untuk testing lokal, isi di sini.
+    const API_PROXY = ""; // Optional: URL serverless function proxy (lebih aman)
 
-function parseHTML(post){try{return new DOMParser().parseFromString(post.content||post,'text/html');}catch(e){return new DOMParser().parseFromString('','text/html');}}
-function extractThumbnail(post){try{const doc=parseHTML(post);const img=doc.querySelector('img');return img?img.src:"https://images.unsplash.com/photo-1611224923853-80b023f02d71?auto=format&fit=crop&w=500&q=80";}catch(e){return"https://images.unsplash.com/photo-1611224923853-80b023f02d71?auto=format&fit=crop&w=500&q=80";}}
-function extractVideoUrl(post){const doc=parseHTML(post);const iframe=doc.querySelector('iframe');if(iframe)return iframe.src;const a=doc.querySelector('a[href*=".mp4"],a[href*="youtu"]');if(a)return a.href;return'';}
-function extractProductLink(post){const doc=parseHTML(post);const a=doc.querySelector('a[href*="shopee"]');return a?a.href:'#';}
-function extractCategory(post){return post.labels?.[0]||"Uncategorized";}
-function extractDuration(post){const doc=parseHTML(post);return doc.querySelector('.duration')?.textContent?.trim()||"10:00";}
-function extractDescription(post){const doc=parseHTML(post);const d=doc.querySelector('.video-description')?.textContent;return d?d.length>160?d.substring(0,160)+'...':d:post.title;}
-function extractGallery(post){const doc=parseHTML(post);const g=doc.querySelector('.gallery');if(g?.textContent){return g.textContent.split(',').map(s=>s.trim()).filter(Boolean);}return Array.from(doc.querySelectorAll("img")).map(i=>i.src);}
-function formatDate(date){return new Date(date).toLocaleDateString();}
+    // Fallback sample movies (dipakai saat API_KEY kosong)
+    const sampleMovies = [
+      {id:1,title:'A New Dawn',genre:'Action',year:2024,duration:'2h 11m',rating:8.5,thumb:'https://images.unsplash.com/photo-1505685296765-3a2736de412f?q=80&w=800&auto=format&fit=crop',poster:'https://images.unsplash.com/photo-1505685296765-3a2736de412f?q=80&w=1600&auto=format&fit=crop',desc:'Aksi non-stop dan visual menawan dalam petualangan menyelamatkan dunia.',trailer:'https://www.youtube.com/embed/ysz5S6PUM-U'},
+      {id:2,title:'Moonlight Sonata',genre:'Drama',year:2023,duration:'1h 48m',rating:7.9,thumb:'https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?q=80&w=800&auto=format&fit=crop',poster:'https://images.unsplash.com/photo-1524985069026-dd778a71c7b4?q=80&w=1600&auto=format&fit=crop',desc:'Drama emosional tentang cinta dan kehilangan.',trailer:'https://www.youtube.com/embed/aqz-KE-bpKQ'},
+      {id:3,title:'Laugh Riot',genre:'Comedy',year:2022,duration:'1h 30m',rating:7.1,thumb:'https://images.unsplash.com/photo-1515165562835-c3a6e4e8e6a0?q=80&w=800&auto=format&fit=crop',poster:'https://images.unsplash.com/photo-1515165562835-c3a6e4e8e6a0?q=80&w=1600&auto=format&fit=crop',desc:'Komedi cepat yang cocok untuk nonton santai.',trailer:'https://www.youtube.com/embed/5qap5aO4i9A'}
+    ];
 
-function displayVideos(list){
-const container=document.getElementById('videoContainer');
-const empty=document.getElementById('emptyState');
-container.innerHTML="";
-if(!list.length){empty.style.display='block';return;}
-empty.style.display='none';
-list.forEach(v=>{
-const el=document.createElement('div');el.className="video-card";
-el.innerHTML=`<div class="video-thumb"><img src="${v.thumbnail}"></div>
-<div class="video-info"><h3>${v.title}</h3></div>`;
-el.onclick=()=>openVideoModal(v.id);
-container.appendChild(el);
-});
-}
+    // DOM refs
+    const grid = document.getElementById('grid');
+    const q = document.getElementById('q');
+    const filters = document.getElementById('filters');
+    const trendingList = document.getElementById('trendingList');
+    const playHero = document.getElementById('playHero');
+    const heroPoster = document.getElementById('heroPoster');
+    const modal = document.getElementById('modal');
+    const modalVideo = document.getElementById('modalVideo');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalMeta = document.getElementById('modalMeta');
+    const closeModal = document.getElementById('closeModal');
+    const yearEl = document.getElementById('year');
+    const loadMore = document.getElementById('loadMore');
+    const heroTitle = document.getElementById('heroTitle');
+    const heroMeta = document.getElementById('heroMeta');
+    const heroDesc = document.getElementById('heroDesc');
+    const heroRating = document.getElementById('heroRating');
 
-async function loadVideosFromBlogger(){
-try{
-const url=`https://www.googleapis.com/blogger/v3/blogs/${BLOG_ID}/posts?key=${API_KEY}&maxResults=20`;
-const res=await fetch(url);
-const data=await res.json();
-if(data.items){currentVideos=data.items.map(p=>({id:p.id,title:p.title,thumbnail:extractThumbnail(p),videoUrl:extractVideoUrl(p),productLink:extractProductLink(p),category:extractCategory(p),duration:extractDuration(p),description:extractDescription(p),raw:p}));displayVideos(currentVideos);}
-}catch(e){console.log("Blogger error",e);}
-}
+    yearEl.textContent = new Date().getFullYear();
 
-function openVideoModal(id){
-const v=currentVideos.find(x=>x.id==id);
-if(!v)return;
-document.getElementById("modalTitle").textContent=v.title;
-document.getElementById("modalDescription").textContent=v.description;
-document.getElementById("modalProductLink").href=v.productLink;
-const gallery=extractGallery(v.raw);
-let galleryHTML="";gallery.forEach((src,i)=>{galleryHTML+=`<img src="${src}" data-index="${i}">`;});
-document.getElementById("imageGallery").innerHTML=galleryHTML;
-document.querySelectorAll("#imageGallery img").forEach(img=>{img.onclick=()=>{currentGallery=gallery;openImageViewer(parseInt(img.dataset.index));};});
-const wrap=document.getElementById("modalVideo");wrap.innerHTML="";
-let src=v.videoUrl;
-if(src.includes("youtu.be")){const id=src.split("youtu.be/")[1];src="https://www.youtube.com/embed/"+id;}
-if(src.includes("watch?v=")){const id=src.split("watch?v=")[1];src="https://www.youtube.com/embed/"+id;}
-if(src.includes("youtube")){wrap.innerHTML=`<iframe src="${src}?autoplay=1&rel=0"></iframe>`;}
-else if(src.endsWith(".mp4")){wrap.innerHTML=`<video controls autoplay src="${src}"></video>`;}
-document.getElementById("videoModal").classList.add("open");
-}
+    let allMovies = []; // array of movie objects used by UI
+    let visible = 8;
+    let activeGenre = 'All';
+    let currentIndex = 0;
 
-document.getElementById("closeModal").onclick=()=>{document.getElementById("videoModal").classList.remove("open");document.getElementById("modalVideo").innerHTML="";};
-document.getElementById("videoModal").onclick=(e)=>{const box=document.getElementById("modalBox");if(!box.contains(e.target)&&e.target.id!=="closeModal"){document.getElementById("closeModal").click();}};
+    // Utilities
+    function extractYouTubeFromContent(html){
+      const div = document.createElement('div'); div.innerHTML = html;
+      const iframe = div.querySelector('iframe');
+      if(iframe){
+        const src = iframe.src || iframe.getAttribute('data-src');
+        // normalize to embed URL
+        return src;
+      }
+      return null;
+    }
 
-let currentGallery=[];
-let currentIndex=0;
-function openImageViewer(index){currentIndex=index;document.getElementById("imgViewerImg").src=currentGallery[currentIndex];document.getElementById("imgViewer").classList.add("open");}
-function closeImageViewer(){document.getElementById("imgViewer").classList.remove("open");}
-document.getElementById("imgPrev").onclick=()=>{currentIndex=(currentIndex-1+currentGallery.length)%currentGallery.length;document.getElementById("imgViewerImg").src=currentGallery[currentIndex];};
-document.getElementById("imgNext").onclick=()=>{currentIndex=(currentIndex+1)%currentGallery.length;document.getElementById("imgViewerImg").src=currentGallery[currentIndex];};
-document.getElementById("imgViewerClose").onclick=closeImageViewer;
-document.getElementById("imgViewer").onclick=(e)=>{if(e.target.id==="imgViewer")closeImageViewer();};
+    function extractFirstImage(html){
+      const div = document.createElement('div'); div.innerHTML = html;
+      const img = div.querySelector('img');
+      if(img) return img.src;
+      return null;
+    }
 
-document.querySelectorAll(".filter-btn").forEach(btn=>{btn.onclick=()=>{document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));btn.classList.add("active");const f=btn.textContent;if(f==="Semua")return displayVideos(currentVideos);displayVideos(currentVideos.filter(v=>v.category===f));};});
-document.getElementById("searchInput").oninput=function(){const q=this.value.toLowerCase();const list=currentVideos.filter(v=>(v.title.toLowerCase().includes(q)||v.description.toLowerCase().includes(q)));displayVideos(list);};
+    // Parse Blogger posts into movie objects
+    function mapPostsToMovies(posts){
+      return posts.map((p, idx) => {
+        const content = p.content || '';
+        const trailer = extractYouTubeFromContent(content);
+        const poster = extractFirstImage(content) || (p.images && p.images[0] && p.images[0].url) || '';
+        const genres = (p.labels && p.labels.length) ? p.labels : ['Uncategorized'];
+        return {
+          id: p.id || idx,
+          title: p.title || 'No title',
+          genre: genres[0],
+          labels: genres,
+          year: p.published ? new Date(p.published).getFullYear() : '',
+          duration: '',
+          rating: '',
+          thumb: poster || 'https://via.placeholder.com/800x450?text=No+Image',
+          poster: poster || 'https://via.placeholder.com/1600x900?text=No+Poster',
+          desc: p.content ? (p.content.replace(/<[^>]+>/g, '').slice(0,200) + '...') : '',
+          trailer: trailer || ''
+        };
+      });
+    }
 
-loadVideosFromBlogger();
-</script>
+    // Fetch posts from Blogger API (search by label optional)
+    async function fetchPosts({label=null,maxResults=20}={}){
+      // choose endpoint: use proxy if set for safety
+      let url;
+      if(API_PROXY){
+        // Proxy expects ?blogId=...&label=...
+        url = `${API_PROXY}?blogId=${BLOG_ID}&label=${encodeURIComponent(label||'')}&maxResults=${maxResults}`;
+      } else if(API_KEY){
+        if(label){
+          url = `https://www.googleapis.com/blogger/v3/blogs/${BLOG_ID}/posts/search?q=label:${encodeURIComponent(label)}&key=${API_KEY}&maxResults=${maxResults}`;
+        } else {
+          url = `https://www.googleapis.com/blogger/v3/blogs/${BLOG_ID}/posts?key=${API_KEY}&maxResults=${maxResults}`;
+        }
+      } else {
+        // No API configured — return sample movies as fallback
+        return sampleMovies;
+      }
 
+      const res = await fetch(url);
+      if(!res.ok) throw new Error('Failed to fetch posts: ' + res.status);
+      const data = await res.json();
+      return mapPostsToMovies(data.items || []);
+    }
+
+    async function loadInitial(){
+      try{
+        // load movies (either from Blogger or fallback)
+        const movies = await fetchPosts({maxResults:50});
+        allMovies = movies.length ? movies : sampleMovies;
+        populateGenreChips(allMovies);
+        renderTrending();
+        setHero(0);
+        renderGrid();
+      }catch(e){
+        console.error(e);
+        // fallback
+        allMovies = sampleMovies;
+        populateGenreChips(allMovies);
+        renderTrending();setHero(0);renderGrid();
+      }
+    }
+
+    function populateGenreChips(list){
+      const genres = new Set(['All']);
+      list.forEach(m=>{ if(m.genre) genres.add(m.genre); if(m.labels) m.labels.forEach(l=>genres.add(l)); });
+      filters.innerHTML = '';
+      Array.from(genres).forEach(g=>{
+        const b = document.createElement('button'); b.className='chip'+(g==='All'? ' active':''); b.dataset.genre=g; b.textContent=g; filters.appendChild(b);
+      });
+    }
+
+    function renderGrid(){
+      grid.innerHTML = '';
+      const qv = q.value.trim().toLowerCase();
+      const filtered = allMovies.filter(m=>{
+        if(activeGenre !== 'All' && !m.labels.includes(activeGenre) && m.genre !== activeGenre) return false;
+        if(qv && !(m.title.toLowerCase().includes(qv) || (m.genre && m.genre.toLowerCase().includes(qv)))) return false;
+        return true;
+      });
+      const toShow = filtered.slice(0,visible);
+      toShow.forEach((m,i)=>{
+        const el = document.createElement('div');el.className='card';el.tabIndex=0;el.setAttribute('role','button');
+        el.innerHTML = `
+          <div class="thumb"><img src="${m.thumb}" alt="${m.title}"></div>
+          <div class="info">
+            <h3 class="title-small">${m.title}</h3>
+            <div class="meta-row"><span class="muted">${m.genre}</span><span class="muted">${m.rating? '⭐ ' + m.rating : ''}</span></div>
+            <div class="muted" style="margin-top:8px;font-size:13px">${m.year} • ${m.duration}</div>
+          </div>`;
+        el.addEventListener('click',()=>openModal(m));
+        el.addEventListener('keypress',(e)=>{if(e.key==='Enter')openModal(m)});
+        grid.appendChild(el);
+      });
+      loadMore.style.display = filtered.length > visible ? 'inline-block' : 'none';
+    }
+
+    function renderTrending(){
+      trendingList.innerHTML='';
+      const slice = allMovies.slice(0,6);
+      slice.forEach((m,idx)=>{
+        const it = document.createElement('div');it.className='mini-item';
+        it.innerHTML = `<img src="${m.thumb}" alt="${m.title}"><div><div class="t">${m.title}</div><div class="muted" style="font-size:12px">${m.genre} • ${m.year}</div></div>`;
+        it.addEventListener('click',()=>openModal(m));
+        trendingList.appendChild(it);
+      });
+    }
+
+    function setHero(index){
+      currentIndex = index || 0;
+      const m = allMovies[currentIndex];
+      if(!m) return;
+      heroPoster.querySelector('img').src = m.poster || m.thumb;
+      heroTitle.textContent = m.title;
+      heroMeta.textContent = `${m.genre} • ${m.year} • ${m.duration}`;
+      heroDesc.textContent = m.desc;
+      heroRating.textContent = m.rating? '⭐ ' + m.rating : '';
+    }
+
+    function openModal(m){
+      modal.classList.add('open');
+      modalTitle.textContent = m.title;
+      modalDesc.textContent = m.desc;
+      modalMeta.textContent = `${m.genre} • ${m.year} • ${m.duration}`;
+      modalVideo.innerHTML = m.trailer ? `<iframe width="100%" height="100%" src="${m.trailer}?autoplay=1&rel=0" title="Trailer ${m.title}" frameborder="0" allowfullscreen allow="autoplay; encrypted-media"></iframe>` : `<div style="display:grid;place-items:center;height:100%;color:var(--muted)">No trailer available</div>`;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function close(){
+      modal.classList.remove('open');
+      modalVideo.innerHTML = '';
+      document.body.style.overflow = '';
+    }
+
+    // event bindings
+    q.addEventListener('input',()=>{visible=8;renderGrid();});
+    filters.addEventListener('click',(e)=>{
+      const btn = e.target.closest('.chip');
+      if(!btn) return;
+      [...filters.querySelectorAll('.chip')].forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+      activeGenre = btn.dataset.genre || 'All';
+      visible = 8;renderGrid();
+    });
+    document.querySelectorAll('[data-year]').forEach(b=>b.addEventListener('click',()=>{const y=b.dataset.year; q.value=y; visible=8; renderGrid();}));
+    playHero.addEventListener('click',()=>{openModal(allMovies[0]);});
+    closeModal.addEventListener('click',close);
+    modal.addEventListener('click',(e)=>{if(e.target===modal)close();});
+    loadMore.addEventListener('click',()=>{visible += 8; renderGrid();});
+
+    // Watchlist
+    function watchlistAdd(movie){
+      const list = JSON.parse(localStorage.getItem('watchlist')||'[]');
+      if(list.find(m=>m.id===movie.id)) return; list.push(movie); localStorage.setItem('watchlist',JSON.stringify(list));
+      alert('Ditambahkan ke watchlist');
+    }
+    document.getElementById('addHero').addEventListener('click',()=>{watchlistAdd(allMovies[currentIndex]);});
+    document.getElementById('watchlistBtn').addEventListener('click',()=>{watchlistAdd(allMovies[currentIndex]);});
+
+    // Dark toggle
+    const darkToggle = document.getElementById('darkToggle');
+    darkToggle.addEventListener('click',()=>{document.documentElement.style.setProperty('--accent', getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()==='#ff5a5f' ? '#6ce2ff' : '#ff5a5f');darkToggle.textContent = darkToggle.textContent === '🌙' ? '☀️' : '🌙';});
+
+    // Keyboard next/prev
+    window.addEventListener('keydown',(e)=>{
+      if(modal.classList.contains('open')){
+        if(e.key==='ArrowRight'){
+          // close and go next
+          close(); currentIndex = (currentIndex + 1) % allMovies.length; setHero(currentIndex); openModal(allMovies[currentIndex]);
+        }
+        if(e.key==='ArrowLeft'){
+          close(); currentIndex = (currentIndex - 1 + allMovies.length) % allMovies.length; setHero(currentIndex); openModal(allMovies[currentIndex]);
+        }
+      } else {
+        if(e.key === '/' && document.activeElement !== q){ e.preventDefault(); q.focus(); }
+        if(e.key==='n'){ currentIndex = (currentIndex + 1) % allMovies.length; setHero(currentIndex); }
+        if(e.key==='p'){ currentIndex = (currentIndex - 1 + allMovies.length) % allMovies.length; setHero(currentIndex); }
+      }
+    });
+
+    // init
+    loadInitial();
+
+  </script>
 </body>
 </html>
