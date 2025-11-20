@@ -20,7 +20,7 @@
 
         /* HEADER dan NAVIGASI */
         header { background-color: var(--background-dark); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--secondary-dark); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); }
+        .logo { font-size: 2rem; font-weight: 700; color: var(--primary-color); }
         nav ul { list-style: none; display: flex; }
         nav ul li a { color: var(--text-light); text-decoration: none; margin-left: 20px; font-weight: 400; transition: color 0.3s ease; padding: 5px 0; }
         
@@ -49,7 +49,7 @@
         
         /* Modifikasi: Judul Font Kecil dan Tidak Bold */
         .film-card h3 { 
-            font-size: 1.3rem;
+            font-size: 1rem;
             font-weight: 400; 
             margin-bottom: 5px; 
             color: var(--primary-color); 
@@ -203,7 +203,7 @@
             const labelQuery = label ? `&labels=${label}` : '';
             const fetchUrl = `https://www.googleapis.com/blogger/v3/blogs/${BLOG_ID}/posts?key=${BLOGGER_API_KEY}&fetchBodies=true&maxResults=${MAX_POSTS}${labelQuery}`;
             
-            container.innerHTML = '<p class="loading-message">Memuat ulasan dari Blog...</p>';
+            container.innerHTML = '<p class="loading-message"></p>';
 
             try {
                 const response = await fetch(fetchUrl);
