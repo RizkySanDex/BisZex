@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎬 CineView | Tinjauan Film Terbaik</title>
+    <title>🎬 CineView | Tinjauan Film</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* CSS Umum dan Header (Sama seperti sebelumnya) */
+        /* CSS Umum dan Header */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary-color: #e50914; 
@@ -16,125 +16,79 @@
             --secondary-dark: #2c2c2c;
         }
         body { font-family: 'Poppins', sans-serif; background-color: var(--background-dark); color: var(--text-light); line-height: 1.6; }
-        header { background-color: var(--background-dark); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--secondary-dark); position: sticky; top: 0; z-index: 100; }
+        
+        /* HEADER DAN NAVIGASI (Hanya sedikit penyesuaian padding) */
+        header { 
+            background-color: var(--background-dark); 
+            padding: 1rem 5%;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--secondary-dark); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100;
+        }
         .logo { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); }
         nav ul { list-style: none; display: flex; }
-        nav ul li a { color: var(--text-light); text-decoration: none; margin-left: 20px; font-weight: 400; transition: color 0.3s ease; }
+        nav ul li a { 
+            color: var(--text-light); 
+            text-decoration: none; 
+            margin-left: 20px; 
+            font-weight: 400; 
+            transition: color 0.3s ease; 
+            padding: 5px 0; /* Tambah padding agar area klik lebih nyaman */
+        }
         nav ul li a:hover { color: var(--primary-color); }
-        .hero { background: #000000 url('https://images.unsplash.com/photo-1542204165-31627c24479e?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max') no-repeat center center/cover; height: 60vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 5%; position: relative; }
-        .hero::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.65); z-index: 1; }
-        .hero * { z-index: 2; }
-        .hero h1 { font-size: 3rem; margin-bottom: 0.5rem; font-weight: 700; }
-        .hero p { font-size: 1.2rem; margin-bottom: 1.5rem; font-weight: 300; }
-        .btn { display: inline-block; background-color: var(--primary-color); color: var(--text-light); padding: 10px 25px; text-decoration: none; border-radius: 5px; font-weight: 600; transition: background-color 0.3s ease; }
-        .btn:hover { background-color: #ff3340; }
-        .btn-secondary { border: 2px solid var(--text-light); color: var(--text-light); padding: 10px 25px; text-decoration: none; border-radius: 5px; font-weight: 600; transition: background-color 0.3s ease, border-color 0.3s ease; }
-        .btn-secondary:hover { background-color: var(--text-light); color: var(--background-dark); }
+        
+        /* TOMBOL TIDAK DIGUNAKAN KARENA HERO HILANG */
+        .btn, .btn-secondary { display: none; }
 
         /* GRID FILM */
-        section.film-grid { padding: 40px 5%; }
+        /* Padding atas disesuaikan karena tidak ada hero */
+        section.film-grid { padding: 40px 5%; min-height: 80vh; } 
         section.film-grid h2 { text-align: center; margin-bottom: 30px; font-size: 2rem; font-weight: 600; }
         .posts-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
 
-        /* KARTU FILM */
+        /* KARTU FILM (Sama seperti sebelumnya) */
         .film-card {
             background-color: var(--secondary-dark);
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer; /* Penting: Tunjukkan bahwa kartu bisa diklik */
-        }
-        .film-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5); }
-        
-        .poster-placeholder {
-            width: 100%;
-            height: 350px;
-            background-color: #383838;
+            cursor: pointer;
             overflow: hidden;
         }
+        .film-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5); }
+        .poster-placeholder { width: 100%; height: 350px; background-color: #383838; overflow: hidden; }
         .poster-placeholder img { width: 100%; height: 100%; object-fit: cover; }
-
         .film-card-info { padding: 20px; }
         .film-card h3 { font-size: 1.5rem; margin-bottom: 5px; color: var(--primary-color); }
         .film-card .genre { color: #aaa; font-size: 0.9rem; margin-bottom: 0; }
         .loading-message { grid-column: 1 / -1; text-align: center; font-style: italic; color: #888; }
 
-        /* CTA BANNER & FOOTER (Sama seperti sebelumnya) */
-        .cta-banner { background-color: var(--primary-color); padding: 60px 5%; text-align: center; margin-top: 40px; }
-        .cta-banner h2 { font-size: 2rem; margin-bottom: 10px; color: var(--text-light); }
-        .cta-banner p { font-size: 1.1rem; margin-bottom: 20px; }
+        /* CTA BANNER DIHILANGKAN KARENA FOKUS UTAMA SUDAH KE POSTINGAN */
+        .cta-banner { display: none; } 
+
+        /* FOOTER (Sama seperti sebelumnya) */
         footer { background-color: var(--secondary-dark); text-align: center; padding: 20px 5%; font-size: 0.9rem; }
         .social-links a { color: var(--text-light); text-decoration: none; margin: 0 5px; transition: color 0.3s ease; }
         .social-links a:hover { color: var(--primary-color); }
 
+        /* CSS MODAL VIDEO (Sama seperti sebelumnya) */
+        .video-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.9); backdrop-filter: blur(5px); }
+        .modal-content { position: relative; background-color: var(--background-dark); margin: 10% auto; padding: 20px; width: 90%; max-width: 900px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5); }
+        .close-btn { color: #aaa; float: right; font-size: 30px; font-weight: bold; line-height: 1; transition: color 0.3s; }
+        .close-btn:hover, .close-btn:focus { color: var(--primary-color); text-decoration: none; cursor: pointer; }
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; margin-top: 15px; }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        
         /* MEDIA QUERIES (Sama seperti sebelumnya) */
         @media (max-width: 768px) {
             header { flex-direction: column; text-align: center; }
             nav ul { margin-top: 10px; }
             nav ul li a { margin: 0 10px; }
-            .hero h1 { font-size: 2.5rem; }
             .posts-container { grid-template-columns: 1fr; }
-        }
-
-        /* ------------------------------------------------ */
-        /* CSS UNTUK MODAL VIDEO */
-        /* ------------------------------------------------ */
-
-        .video-modal {
-            display: none; /* Default tersembunyi */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.9); /* Overlay gelap */
-            backdrop-filter: blur(5px);
-        }
-
-        .modal-content {
-            position: relative;
-            background-color: var(--background-dark);
-            margin: 10% auto; /* Tengah vertikal */
-            padding: 20px;
-            width: 90%;
-            max-width: 900px; /* Ukuran maksimal modal */
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .close-btn {
-            color: #aaa;
-            float: right;
-            font-size: 30px;
-            font-weight: bold;
-            line-height: 1;
-            transition: color 0.3s;
-        }
-
-        .close-btn:hover,
-        .close-btn:focus {
-            color: var(--primary-color);
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .video-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* Rasio aspek 16:9 */
-            height: 0;
-            overflow: hidden;
-            margin-top: 15px;
-        }
-
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
         }
     </style>
 </head>
@@ -144,33 +98,20 @@
         <div class="logo">CineView</div>
         <nav>
             <ul>
-                <li><a href="#beranda">Beranda</a></li>
-                <li><a href="#terbaru">Terbaru</a></li>
-                <li><a href="#populer">Populer</a></li>
-                <li><a href="URL_BLOG_ANDA" target="_blank">Blog Tinjauan</a></li>
-                <li><a href="#kontak">Hubungi</a></li>
+                <li><a href="#">Terbaru</a></li>
+                <li><a href="#">Populer</a></li>
+                <li><a href="URL_BLOG_ANDA" target="_blank">Blog/Review</a></li>
+                <li><a href="URL_GITHUB_ANDA" target="_blank">GitHub</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section id="beranda" class="hero">
-            <h1>Temukan Film Terbaik. Tinjau Kisahnya.</h1>
-            <p>Platform untuk ulasan film yang mendalam dan berkelas.</p>
-            <a href="#terbaru" class="btn">Lihat Ulasan Terbaru</a>
-        </section>
-
         <section id="terbaru" class="film-grid">
             <h2>✨ Ulasan Terbaru</h2>
             <div class="posts-container" id="latest-posts-container">
                 <p class="loading-message">Memuat ulasan terbaru dari Blog...</p>
             </div>
-        </section>
-
-        <section id="populer" class="cta-banner">
-            <h2>Tertarik dengan Film Populer?</h2>
-            <p>Lihat arsip ulasan film terpopuler sepanjang masa di blog kami.</p>
-            <a href="URL_ARSIP_POPULER_BLOG" class="btn-secondary">Kunjungi Arsip Populer</a>
         </section>
 
         <footer id="kontak">
@@ -198,10 +139,9 @@
         // -------------------------------------------
         const BLOGGER_API_KEY = "AIzaSyA8k0Fr9m-7zsC1EzdOjI3kgMR92bJHs_E";
         const BLOG_ID = "4521274187180591519";
-        const MAX_POSTS = 10; // Jumlah postingan yang ingin ditampilkan
+        const MAX_POSTS = 10;
         // -------------------------------------------
 
-        // Ganti URL API untuk mengambil konten penuh (fetchBodies=true)
         const API_URL = `https://www.googleapis.com/blogger/v3/blogs/${BLOG_ID}/posts?key=${BLOGGER_API_KEY}&fetchBodies=true&maxResults=${MAX_POSTS}`;
         const container = document.getElementById('latest-posts-container');
         const modal = document.getElementById('videoModal');
@@ -210,31 +150,23 @@
         const modalTitle = document.getElementById('modalTitle');
         const modalPostLink = document.getElementById('modalPostLink');
         
-        /**
-         * Fungsi pembantu untuk mengambil nilai dari HTML Content (mirip regex sederhana)
-         * Digunakan untuk menemukan Iframe (video embed) dan Thumbnail.
-         */
         function extractVideoInfo(content) {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = content;
             
-            // 1. Ambil Iframe Video Embed (Youtube, dll)
-            // Asumsi: Iframe pertama adalah video yang dimaksud
+            // Ambil Iframe Video Embed (Youtube, dll)
             const iframe = tempDiv.querySelector('iframe');
             const videoSrc = iframe ? iframe.src : null;
             
-            // 2. Ambil Thumbnail (Gambar pertama di postingan)
+            // Ambil Thumbnail (Gambar pertama di postingan)
             const img = tempDiv.querySelector('img');
             const thumbSrc = img ? img.src : 'https://via.placeholder.com/600x350.png?text=Poster+Tidak+Tersedia';
             
             return { videoSrc, thumbSrc };
         }
 
-        /**
-         * Fungsi untuk menampilkan modal
-         */
         function openModal(title, videoSrc, postLink) {
-            // Hapus parameter autoplay yang mungkin ada dan tambahkan autoplay=1 untuk otomatis putar
+            // Bersihkan parameter dan tambahkan autoplay=1 untuk otomatis putar
             const cleanSrc = videoSrc.replace(/[?&]autoplay=.*?(&|$)/i, '').replace(/[?&]enablejsapi=.*?(&|$)/i, '');
             const finalSrc = cleanSrc.includes('?') ? cleanSrc + '&autoplay=1&enablejsapi=1' : cleanSrc + '?autoplay=1&enablejsapi=1';
             
@@ -242,27 +174,23 @@
             modalPlayer.src = finalSrc;
             modalPostLink.href = postLink;
             modal.style.display = 'block';
-            document.body.style.overflow = 'hidden'; // Nonaktifkan scroll body
+            document.body.style.overflow = 'hidden'; 
         }
 
-        /**
-         * Fungsi untuk menyembunyikan modal
-         */
         function closeModal() {
             modal.style.display = 'none';
-            modalPlayer.src = ''; // Hentikan video dengan menghapus src
-            document.body.style.overflow = 'auto'; // Aktifkan scroll body
+            modalPlayer.src = ''; // Hentikan video
+            document.body.style.overflow = 'auto'; 
         }
 
-        /**
-         * Fungsi utama untuk mengambil postingan
-         */
         async function fetchLatestPosts() {
             try {
                 const response = await fetch(API_URL);
+                
                 if (!response.ok) {
                     throw new Error('Gagal mengambil data. Cek ID Blog atau API Key Anda.');
                 }
+                
                 const data = await response.json();
                 
                 if (!data.items || data.items.length === 0) {
@@ -270,22 +198,19 @@
                     return;
                 }
                 
-                container.innerHTML = ''; // Hapus pesan 'Memuat...'
+                container.innerHTML = ''; 
                 
                 data.items.forEach(post => {
                     const postTitle = post.title;
                     const labels = post.labels ? post.labels.join(', ') : 'Umum';
                     const postUrl = post.url;
                     
-                    // 1. EKSTRAK INFO DARI KONTEN POSTINGAN
                     const { videoSrc, thumbSrc } = extractVideoInfo(post.content);
 
                     // Hanya tampilkan jika memiliki link video (iframe)
                     if (videoSrc) {
                         const card = document.createElement('article');
                         card.className = 'film-card';
-                        
-                        // Tambahkan event listener untuk membuka modal
                         card.addEventListener('click', () => openModal(postTitle, videoSrc, postUrl));
 
                         card.innerHTML = `
