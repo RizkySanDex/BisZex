@@ -3,39 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎬 BisZEX</title>
+    <title>🎬 BisZEX Film</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     
     <style>
-        /* CSS Umum dan Header */
+        /* CSS Umum dan Reset */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
             --primary-color: #e50914; 
             --background-dark: #141414;
             --text-light: #f5f5f5;
             --secondary-dark: #2c2c2c;
-            --ad-color: #00b0ff; /* Warna Aksen Iklan (Biru Cerah) */
+            --ad-color: #00b0ff;
         }
         body { font-family: 'Poppins', sans-serif; background-color: var(--background-dark); color: var(--text-light); line-height: 1.6; }
+
+        /* HEADER dan NAVIGASI */
         header { background-color: var(--background-dark); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--secondary-dark); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 2rem; font-weight: 700; color: var(--primary-color); }
+        .logo { font-size: 1.8rem; font-weight: 700; color: var(--primary-color); }
         nav ul { list-style: none; display: flex; }
         nav ul li a { color: var(--text-light); text-decoration: none; margin-left: 20px; font-weight: 400; transition: color 0.3s ease; padding: 5px 0; }
-        nav ul li a:hover { color: var(--primary-color); }
-        .btn, .btn-secondary { display: none; }
+        
+        /* Gaya Link Navigasi Aktif */
+        .nav-link.active, nav ul li a:hover { 
+            color: var(--primary-color); 
+            border-bottom: 2px solid var(--primary-color);
+        }
+        
+        /* GRID FILM */
         section.film-grid { padding: 40px 5%; min-height: 80vh; } 
         section.film-grid h2 { text-align: center; margin-bottom: 30px; font-size: 2rem; font-weight: 600; }
         .posts-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+
+        /* KARTU FILM */
         .film-card { background-color: var(--secondary-dark); border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; overflow: hidden; }
         .film-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(229, 9, 20, 0.5); }
         .poster-placeholder { width: 100%; height: 350px; background-color: #383838; overflow: hidden; }
         .poster-placeholder img { width: 100%; height: 100%; object-fit: cover; }
-        .film-card-info { padding: 20px; text-align: center; /* <<< TAMBAHKAN INI */}
         
-        /* MODIFIKASI: Ukuran font judul kartu film dikecilkan dan tidak bold */
+        /* Modifikasi: Judul Rata Tengah */
+        .film-card-info { 
+            padding: 20px; 
+            text-align: center; 
+        }
+        
+        /* Modifikasi: Judul Font Kecil dan Tidak Bold */
         .film-card h3 { 
-            font-size: 1rem; /* Dikecilkan dari 1.5rem */
-            font-weight: 300; /* Dibuat tidak bold (normal) */
+            font-size: 1.3rem;
+            font-weight: 400; 
             margin-bottom: 5px; 
             color: var(--primary-color); 
         }
@@ -86,11 +101,12 @@
 <body>
 
     <header>
-        <div class="logo">BisZEX</div>
+        <div class="logo">BisZEX Film</div>
         <nav>
-            <ul>
-                <li><a href="#">Terbaru</a></li>
-                <li><a href="#">Populer</a></li>
+            <ul id="main-nav-list">
+                <li><a href="#" class="nav-link active" data-label="">Terbaru</a></li>
+                <li><a href="#" class="nav-link" data-label="POPULER">Populer</a></li>
+                <li><a href="#" class="nav-link" data-label="REVIEW">Review</a></li>
                 <li><a href="URL_BLOG_ANDA" target="_blank">Blog/Review</a></li>
                 <li><a href="URL_GITHUB_ANDA" target="_blank">GitHub</a></li>
             </ul>
@@ -101,11 +117,11 @@
         <section id="terbaru" class="film-grid">
             <h2></h2>
             <div class="posts-container" id="latest-posts-container">
-                         </div>
+            </div>
         </section>
 
         <footer id="kontak">
-            <p>&copy; 2025 CineView. Dibuat dengan 💜 untuk pecinta film.</p>
+            <p>&copy; 2025 BisZEX Film. Dibuat dengan 💜 untuk pecinta film.</p>
             <div class="social-links">
                 <a href="URL_GITHUB_ANDA" target="_blank">GitHub</a> |
                 <a href="mailto:emailanda@domain.com">Email Kami</a>
@@ -123,7 +139,7 @@
             
             <div class="ad-cta-container">
                 <a id="adButtonLink" href="https://www.effectivegatecpm.com/chj3nt5j?key=53395c0910a457d17c8975fb650cccb7" class="ad-button" target="_blank">
-                    Tonton Film Full HD-Nya Disini! &rarr;
+                    Tonton Film Full HD-Nya& Sekarang! &rarr;
                 </a>
             </div>
         </div>
@@ -134,16 +150,21 @@
         // -------------------------------------------
         const BLOGGER_API_KEY = "AIzaSyA8k0Fr9m-7zsC1EzdOjI3kgMR92bJHs_E";
         const BLOG_ID = "4521274187180591519";
-        const MAX_POSTS = 6;
+        const MAX_POSTS = 12;
+        const DEFAULT_URL_IKLAN = "https://www.effectivegatecpm.com/chj3nt5j?key=53395c0910a457d17c8975fb650cccb7"; // URL Iklan Anda
         // -------------------------------------------
 
-        const API_URL = `https://www.googleapis.com/blogger/v3/blogs/${BLOG_ID}/posts?key=${BLOGGER_API_KEY}&fetchBodies=true&maxResults=${MAX_POSTS}`;
         const container = document.getElementById('latest-posts-container');
         const modal = document.getElementById('videoModal');
         const closeBtn = document.querySelector('.close-btn');
         const modalPlayer = document.getElementById('modalVideoPlayer');
         const modalTitle = document.getElementById('modalTitle');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const adButtonLink = document.getElementById('adButtonLink');
         
+        // Atur link iklan statis
+        adButtonLink.href = DEFAULT_URL_IKLAN;
+
         function extractVideoInfo(content) {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = content;
@@ -173,16 +194,26 @@
             document.body.style.overflow = 'auto'; 
         }
 
-        async function fetchLatestPosts() {
+        /**
+         * Fungsi utama untuk mengambil postingan berdasarkan label
+         * @param {string} label - Label untuk filter (kosong untuk terbaru).
+         */
+        async function fetchPostsByLabel(label = '') {
+            // Konstruksi URL API: tambahkan &labels= hanya jika label tidak kosong
+            const labelQuery = label ? `&labels=${label}` : '';
+            const fetchUrl = `https://www.googleapis.com/blogger/v3/blogs/${BLOG_ID}/posts?key=${BLOGGER_API_KEY}&fetchBodies=true&maxResults=${MAX_POSTS}${labelQuery}`;
+            
+            container.innerHTML = '<p class="loading-message">Memuat ulasan dari Blog...</p>';
+
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(fetchUrl);
                 if (!response.ok) {
-                    throw new Error('Gagal mengambil data. Cek ID Blog atau API Key Anda.');
+                    throw new Error('Gagal mengambil data. Cek API Key/ID Blog atau format URL.');
                 }
                 const data = await response.json();
                 
                 if (!data.items || data.items.length === 0) {
-                    container.innerHTML = '<p class="loading-message">Belum ada ulasan yang diterbitkan.</p>';
+                    container.innerHTML = `<p class="loading-message">Belum ada postingan dengan label "${label || 'Terbaru'}".</p>`;
                     return;
                 }
                 
@@ -191,7 +222,7 @@
                 data.items.forEach(post => {
                     const postTitle = post.title;
                     
-                    // MODIFIKASI: Ambil label. Jika tidak ada label, hasilnya adalah string kosong ('').
+                    // Ambil label, jika tidak ada, hasilnya string kosong (menghilangkan 'Umum')
                     const labels = post.labels ? post.labels.join(', ') : '';
                     
                     const { videoSrc, thumbSrc } = extractVideoInfo(post.content);
@@ -216,9 +247,42 @@
 
             } catch (error) {
                 console.error("Terjadi Kesalahan:", error);
-                container.innerHTML = `<p class="loading-message" style="color: var(--primary-color);">Error: Gagal memuat ulasan. Cek API Key/ID Blog atau format postingan. (${error.message})</p>`;
+                container.innerHTML = `<p class="loading-message" style="color: var(--primary-color);">Error: Gagal memuat ulasan. (${error.message})</p>`;
             }
         }
+        
+        // -------------------------------------------
+        // LOGIKA EVENT LISTENER MENU
+        // -------------------------------------------
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Hanya jalankan logika filtrasi untuk link yang memiliki data-label
+                if (this.dataset.label !== undefined && this.href === '#') {
+                    e.preventDefault(); 
+                    
+                    const selectedLabel = this.dataset.label; 
+
+                    // Hapus kelas 'active' dari semua link dan tambahkan ke link yang diklik
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active'); 
+
+                    // Panggil fungsi filter
+                    fetchPostsByLabel(selectedLabel);
+                }
+            });
+        });
+
+        // -------------------------------------------
+        // PANGGILAN AWAL
+        // -------------------------------------------
+
+        // Panggil fungsi dengan label dari menu aktif (default Terbaru) saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialLink = document.querySelector('.nav-link.active');
+            const initialLabel = initialLink ? initialLink.dataset.label : '';
+            fetchPostsByLabel(initialLabel);
+        });
 
         // Event Listeners untuk Modal
         closeBtn.addEventListener('click', closeModal);
@@ -227,9 +291,6 @@
                 closeModal();
             }
         });
-
-        // Jalankan fungsi saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', fetchLatestPosts);
     </script>
 
 </body>
